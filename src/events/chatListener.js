@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from "discord.js";
+import { PermissionFlagsBits, MessageFlags } from "discord.js";
 import homoglyphSearch from "homoglyph-search";
 
 export default {
@@ -33,10 +33,12 @@ export default {
       ];
       console.log(message.content.toLowerCase());
       if (homoglyphSearch.search(message.content.toLowerCase(), scamKeywords)) {
+        await message.reply({
+          content: `Your message was removed because it mentioned everyone/here mentions and contained possible scam-related content. Please refrain from such messages.`,
+          flags: MessageFlags.Ephemeral
+        });
+        
         await message.delete();
-        await message.channel.send(
-          `${message.author}, your message was removed because it mentioned everyone/here mentions and contained possible scam-related content. Please refrain from such messages.`
-        );
       }
     }
     if (!message.channel.name.includes('ai-chat')) return;
