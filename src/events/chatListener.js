@@ -33,11 +33,6 @@ export default {
       ];
       
       if (homoglyphSearch.search(message.content.toLowerCase(), scamKeywords).length !== 0) {
-        await message.reply({
-          content: `Your message was removed because it mentioned everyone/here mentions and contained possible scam-related content. Please refrain from such messages.`,
-          flags: MessageFlags.Ephemeral
-        });
-        
         const reply = await message.channel.send({
           content: `<@${message.author.id}> Your message was removed because it contained everyone/here mentions and potentially scam-related content. Please avoid sending such messages in the future.`
         });
