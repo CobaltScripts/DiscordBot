@@ -39,7 +39,7 @@ export default {
         });
         
         const reply = await message.channel.send({
-          content: "<@${message.author.id}> Your message was removed because it contained @everyone/@here mentions and potentially scam-related content. Please avoid sending such messages in the future."
+          content: `<@${message.author.id}> Your message was removed because it contained everyone/here mentions and potentially scam-related content. Please avoid sending such messages in the future.`
         });
 
         setTimeout(() => {
