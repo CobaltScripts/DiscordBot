@@ -1,4 +1,5 @@
 import { PermissionFlagsBits } from "discord.js";
+import homoglyphSearch from "homoglyph-search";
 
 export default {
   name: 'messageCreate',
@@ -10,7 +11,7 @@ export default {
   async execute(client, message) {
     if (
       (message.content.toLowerCase().includes('@everyone') ||
-      message.content.toLowerCase().includes('@here')) &&
+        message.content.toLowerCase().includes('@here')) &&
       !message.member.permissions.has(PermissionFlagsBits.MentionEveryone)
     ) {
       const scamKeywords = [
@@ -31,7 +32,7 @@ export default {
         "image.png" // this one MIGHT false flag but scams use it + who tf does @everyone for normal images without perms
       ];
       console.log(message.content.toLowerCase());
-      if (scamKeywords.some(word => message.content.toLowerCase().includes(word))) {
+      if (homoglyphSearch.search(message.content.toLowerCase(), scamKeywords)) {
         await message.delete();
         await message.channel.send(
           `${message.author}, your message was removed because it mentioned everyone/here mentions and contained possible scam-related content. Please refrain from such messages.`
@@ -44,7 +45,7 @@ export default {
     }
 
     const content = message.content.trim().toLowerCase();
-  
+
     if (content === `<@!${client.user.id}>`) {
       return;
     }
@@ -76,12 +77,12 @@ export default {
           content: msg,
           allowedMentions: {
             parse: [],
-            repliedUser: false, 
+            repliedUser: false,
           },
         });
         continue;
       }
-    
+
       await message.channel.send({
         content: msg.trim(),
         allowedMentions: {
