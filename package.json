@@ -25,7 +25,8 @@
     "discord.js": "^14.23.2",
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
-    "smee-client": "^1.0.1"
+    "smee-client": "^1.0.1",
+    "homoglyph-search": "^1.3.0"
   },
   "devDependencies": {
     "prettier": "^3.6.2"
