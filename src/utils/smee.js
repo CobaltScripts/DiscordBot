@@ -107,7 +107,7 @@ const handleWebhook = async (client, req, res) => {
   if (channel) {
     await channel.send({
       embeds: [embed],
-      content: `<@&${constants.COMMIT_ROLE_ID}>`,
+      // content: `<@&${constants.COMMIT_ROLE_ID}>`,
     });
   }
 
