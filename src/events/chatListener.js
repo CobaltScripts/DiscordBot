@@ -44,35 +44,36 @@ export default {
         await message.delete();
       }
     }
+
     if (!message.channel.name.includes('ai-chat')) return;
-    if (message.author.bot || !message.mentions.has(client.user)) {
-      return;
-    }
+    if (message.author.bot || !message.mentions.has(client.user)) return;
 
     const content = message.content.trim().toLowerCase();
-
-    if (content === `<@!${client.user.id}>`) {
-      return;
-    }
+    if (content === `<@!${client.user.id}>`) return;
 
     if (message.member.permissions.has(PermissionFlagsBits.Administrator) && content.includes('dev reset')) {
       client.chatBot.reset();
-
       return await message.reply({
         content: 'Sir yes sir! 🫡',
         allowedMentions: { repliedUser: false },
       });
     }
 
-    await message.channel.sendTyping();
-    const res = await client.chatBot.generateResponse(
-      content,
-      message.author,
-    );
-
-    if (!res || res.length === 0) {
-      return;
+    // Special mode toggle!
+    if (message.member.permissions.has(PermissionFlagsBits.Administrator) && content.includes('special mode')) {
+      const enabled = client.chatBot.toggleSpecialMode();
+      return await message.reply({
+        content: enabled
+          ? 'Special mode activated! Context extended >.<'
+          : 'Special mode deactivated. Back to normal context.',
+        allowedMentions: { repliedUser: false },
+      });
     }
+
+    await message.channel.sendTyping();
+    const res = await client.chatBot.generateResponse(content, message.author);
+
+    if (!res || res.length === 0) return;
 
     const msgs = res.split('|||');
 
@@ -80,19 +81,14 @@ export default {
       if (msg === msgs[0]) {
         await message.reply({
           content: msg,
-          allowedMentions: {
-            parse: [],
-            repliedUser: false,
-          },
+          allowedMentions: { parse: [], repliedUser: false },
         });
         continue;
       }
 
       await message.channel.send({
         content: msg.trim(),
-        allowedMentions: {
-          parse: [],
-        },
+        allowedMentions: { parse: [] },
       });
     }
   },
