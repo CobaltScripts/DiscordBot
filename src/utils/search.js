@@ -1,34 +1,38 @@
 /**
- * Search for a member in a guild by display name, user ID, username, or mention.
- * Returns the first match or null.
- * @param {Guild} guild - The Discord guild (server) object.
- * @param {string} query - The search query string.
- * @returns {Promise<GuildMember>} - The first matching member or null.
+ * Searches for a member over time, not after downloading full member list
+ * This avoids fetching the entire member list.
+ * @param {import("discord.js").Guild} guild The guild to search in.
+ * @param {string} query The user ID, mention, or name to search for.
+ * @returns {Promise<import("discord.js").GuildMember|null>}
  */
 export const searchMember = async (guild, query) => {
-  const mentionRegex = /^<@!?(\d+)>$/;
-  const mentionMatch = query.match(mentionRegex);
-  const userIdFromMention = mentionMatch ? mentionMatch[1] : null;
-  const members = await guild.members.fetch();
-  const normalizedQuery = query.toLowerCase();
+  if (!guild || !query) return null;
 
-  for (const member of members.values()) {
-    const displayName = member.displayName.toLowerCase();
-    const username = member.user.username.toLowerCase();
-    const userId = member.user.id;
-
-    const isMatch =
-      displayName.includes(normalizedQuery) ||
-      username.includes(normalizedQuery) ||
-      userId === query ||
-      userId === userIdFromMention;
-
-    if (isMatch) {
-      return member;
+  const mentionMatch = query.match(/^<@!?(\d+)>$/);
+  if (mentionMatch) {
+    const userId = mentionMatch[1];
+    try {
+      return await guild.members.fetch(userId);
+    } catch (e) {
+      return null;
     }
   }
 
-  return null;
+  if (/^\d{17,19}$/.test(query)) {
+    try {
+      return await guild.members.fetch(query);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  try {
+    const results = await guild.members.fetch({ query, limit: 1 });
+    return results.first() || null; 
+  } catch (e) {
+    console.error("Failed to search for member:", e);
+    return null;
+  }
 };
 
 /**
