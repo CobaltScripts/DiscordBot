@@ -20,12 +20,15 @@ export default {
       constants.ROLES.COMMUNITY,
     );
 
-    const ignoredRoles = new Set([
-      guild.roles.premiumSubscriberRole || null?.id,
-      guild.roles.cache.get(constants.ROLES.UPDATES)?.id,
-      guild.roles.cache.get(constants.ROLES.QOTD_PING)?.id,
-      guild.roles.cache.get(constants.ROLES.SUPPORT)?.id,
-    ]);
+    const ignoredRoles = new Set(
+      [
+        guild.id, // @everyone role
+        guild.roles.premiumSubscriberRole?.id,
+        guild.roles.cache.get(constants.ROLES.UPDATES)?.id,
+        guild.roles.cache.get(constants.ROLES.QOTD_PING)?.id,
+        guild.roles.cache.get(constants.ROLES.SUPPORT)?.id,
+      ].filter(id => id != null)
+    );
 
     await interaction.reply({
       embeds: [
