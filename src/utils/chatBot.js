@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { GoogleGenAI, ApiError } from '@google/genai';
 import { readFileSync } from 'fs';
 import { logger } from './logger.js';
 
@@ -34,7 +34,13 @@ export class ChatBot {
       return response.text;
     } catch (error) {
       logger.error(`Error generating response: ${error}`);
-      return 'i errored :/';
+      if (error instanceof ApiError) {
+        if (error.status === 503) return "The AI model is currently overloaded, Please try again later."
+        if (error.status === 429) return "API key exceeded quota, Please try again later."
+        return "An unhandled API error occurred, If persistent, Contact the bot owner."
+      }
+      return "An unhandled error occurred, if persistent, contact the bot owner."
+
     }
   }
 }
