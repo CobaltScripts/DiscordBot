@@ -14,6 +14,7 @@ export default {
    */
   async execute(client, interaction) {
     const guild = interaction.guild;
+    await guild.members.fetch();
     const members = guild.members.cache;
 
     const communityRole = guild.roles.cache.get(
