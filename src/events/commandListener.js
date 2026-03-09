@@ -4,10 +4,6 @@ import { logger } from '../utils/logger.js';
 export default {
   name: 'messageCreate',
 
-  /**
-   * @param {import("../client/bot.js").Bot} client
-   * @param {import("discord.js").Message} message
-   */
   async execute(client, message) {
     if (message.author.bot) return;
     if (!message.content.startsWith(client.prefix)) return;

@@ -8,10 +8,6 @@ export default {
     .setDescription('Syncs roles for all members')
     .setDefaultMemberPermissions(PermissionFlagsBits.Administrator),
 
-  /**
-   * @param {import("../../client/bot.js").Bot} client
-   * @param {import("discord.js").ChatInputCommandInteraction} interaction
-   */
   async execute(client, interaction) {
     const guild = interaction.guild;
     const members = guild.members.cache;

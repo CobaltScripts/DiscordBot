@@ -1,10 +1,3 @@
-/**
- * Search for a member in a guild by display name, user ID, username, or mention.
- * Returns the first match or null.
- * @param {import("discord.js").Guild} guild - The Discord guild (server) object.
- * @param {string} query - The search query string.
- * @returns {Promise<import("discord.js").GuildMember>} - The first matching member or null.
- */
 export const searchMember = async (guild, query) => {
   const mentionRegex = /^<@!?(\d+)>$/;
   const mentionMatch = query.match(mentionRegex);
@@ -49,13 +42,6 @@ export const searchMember = async (guild, query) => {
   return partial || null;
 };
 
-/**
- * Search for a role in a guild by name, ID, or mention.
- * Returns the first match or null.
- * @param {import("discord.js").Guild} guild - The Discord guild (server) object.
- * @param {string} query - The search query string.
- * @returns {Promise<import("discord.js").Role>} - The first matching role or null.
- */
 export const searchRole = async (guild, query) => {
   const mentionRegex = /^<@&(\d+)>$/;
   const mentionMatch = query.match(mentionRegex);
@@ -81,14 +67,6 @@ export const searchRole = async (guild, query) => {
   return null;
 };
 
-/**
- * Search for a channel in a guild by name, ID, or mention.
- * Returns the first match or null.
- *
- * @param {import("discord.js").Guild} guild - The Discord guild object.
- * @param {string} query - The search query (name, ID, or mention).
- * @returns {Promise<import("discord.js").GuildChannel | null>}
- */
 export const searchChannel = async (guild, query) => {
   if (!guild || !query) return null;
 

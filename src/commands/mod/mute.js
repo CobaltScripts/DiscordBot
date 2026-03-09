@@ -6,10 +6,6 @@ import { successEmbed, errorEmbed } from '../../utils/embeds.js';
 export default {
   name: 'mute',
 
-  /**
-   * @param {import("../../client/bot.js").Bot} client
-   * @param {import("discord.js").Message} message
-   */
   async execute(client, message, user, duration) {
     if (
       !message.member.permissions.has(PermissionFlagsBits.MuteMembers)

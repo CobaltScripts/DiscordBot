@@ -1,14 +1,9 @@
 import { PermissionFlagsBits } from 'discord.js';
 import { successEmbed, errorEmbed } from '../../utils/embeds.js';
 
-/** Thank you oblongboot and WaterPhoenix196 for their contributions. */
 export default {
   name: 'lock',
 
-  /**
-   * @param {import("../../client/bot.js").Bot} client
-   * @param {import("discord.js").Message} message
-   */
   async execute(client, message) {
     if (
       !message.member.permissions.has(

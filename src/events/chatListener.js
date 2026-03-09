@@ -4,10 +4,6 @@ import homoglyphSearch from 'homoglyph-search';
 export default {
   name: 'messageCreate',
 
-  /**
-   * @param {import("../client/bot.js").Bot} client
-   * @param {import("discord.js").Message} message
-   */
   async execute(client, message) {
     if (
       (message.content.toLowerCase().includes('@everyone') ||

@@ -3,10 +3,6 @@ import { Events } from 'discord.js';
 export default {
   name: Events.InteractionCreate,
 
-  /**
-   * @param {import('../client/bot.js').Bot} client
-   * @param {import('discord.js').Interaction} interaction
-   */
   async execute(client, interaction) {
     if (!interaction.isChatInputCommand()) return;
 

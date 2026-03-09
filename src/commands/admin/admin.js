@@ -7,7 +7,6 @@ import {
 import { successEmbed, errorEmbed } from '../../utils/embeds.js';
 import constants from '../../utils/constants.js';
 
-/** Thank you oblongboot for this command */
 export default {
   name: 'admin',
   description: 'Administrator commands for server management',
@@ -22,41 +21,8 @@ export default {
     }
 
     switch (subcommand) {
-      case 'purgetickets': {
-        const ticketChannels = message.guild.channels.cache.filter(
-          (channel) => channel.name.startsWith('ticket-'),
-        );
-
-        let deletedCount = 0;
-
-        for (const [id, channel] of ticketChannels) {
-          try {
-            await channel.delete('Purging ticket channels');
-            deletedCount++;
-          } catch (err) {
-            console.error(
-              `Failed to delete channel ${channel.name}:`,
-              err,
-            );
-          }
-        }
-
-        await message.reply({
-          embeds: [
-            successEmbed(`Purged ${deletedCount} ticket channels.`),
-          ],
-        });
-
-        break;
-      }
-
       case 'rrembed': {
         await reactionRoleEmbedCommand(client, message);
-        break;
-      }
-
-      case 'tembed': {
-        await ticketsEmbed(client, message);
         break;
       }
 
@@ -69,7 +35,7 @@ export default {
         return message.reply({
           embeds: [
             errorEmbed(
-              `Unknown subcommand: ${subcommand}\n\nAvailable: dmall, stickymessage, purgetickets, rrembed, tembed`,
+              `Unknown subcommand: ${subcommand}\n\nAvailable: stickymessage, rrembed`,
             ),
           ],
         });
@@ -248,32 +214,4 @@ async function reactionRoleEmbedCommand(client, message) {
       ],
     });
   }
-}
-
-async function ticketsEmbed(client, message) {
-  if (
-    !message.member.permissions.has(PermissionFlagsBits.Administrator)
-  ) {
-    return message.reply({
-      embeds: [errorEmbed('Insufficient Permssions.')],
-    });
-  }
-
-  const embed = client
-    .embed()
-    .setTitle('Tickets')
-    .setDescription('Click the button to open a ticket!');
-
-  const button = new ButtonBuilder()
-    .setCustomId('open_ticket')
-    .setLabel('Open')
-    .setEmoji('📩')
-    .setStyle(ButtonStyle.Secondary);
-
-  const row = new ActionRowBuilder().addComponents(button);
-
-  await message.channel.send({
-    embeds: [embed],
-    components: [row],
-  });
 }

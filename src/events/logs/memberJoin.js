@@ -4,10 +4,6 @@ import constants from '../../utils/constants.js';
 export default {
   name: 'guildMemberAdd',
 
-  /**
-   * @param {import("../../client/bot.js").Bot} client
-   * @param {import("discord.js").GuildMember} member
-   */
   async execute(client, member) {
     const channel = client.channels.cache.get(
       constants.MODLOGS_CHANNEL,
