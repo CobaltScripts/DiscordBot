@@ -1,4 +1,5 @@
 import { logger } from '../utils/logger.js';
+import { startSmeeClient } from '../utils/smee.js';
 
 export default {
   name: 'clientReady',
@@ -26,7 +27,7 @@ export default {
           `Failed to register slash commands for guild ${fetchedGuild.name}: ${error}`,
         );
       }
-
+//comment to force workflow
       const members = await fetchedGuild.members.fetch();
 
       for (const member of members.values()) {
@@ -37,7 +38,7 @@ export default {
         users.add(member.user.id);
       }
     }
-
+    startSmeeClient(client)
     client.user.setPresence({
       status: 'dnd',
       activities: [

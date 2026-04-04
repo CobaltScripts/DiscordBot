@@ -11,6 +11,7 @@ import { fileURLToPath } from 'url';
 import path from 'path';
 import { ChatBot } from '../utils/chatBot.js';
 import { QuickDB } from 'quick.db';
+import { startSmeeClient } from '../utils/smee.js';
 
 export class Bot extends Client {
   constructor(geminiApiKey) {
@@ -93,7 +94,6 @@ export class Bot extends Client {
     }
 
     this.chatBot.reset();
-
     await this.registerCommands();
     await this.registerEvents();
     await this.login(token);
