@@ -100,7 +100,7 @@ const handleWebhook = async (client, req, res) => {
     ])
     .setColor(0x4682b4);
 
-  const channel = await client.channels.fetch(1489996651551522816);
+  const channel = await client.channels.fetch("1489996651551522816");
 
   if (channel) {
     await channel.send({
