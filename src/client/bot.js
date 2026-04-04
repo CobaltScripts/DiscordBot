@@ -94,10 +94,12 @@ export class Bot extends Client {
     }
 
     this.chatBot.reset();
-    startSmeeClient();
     await this.registerCommands();
     await this.registerEvents();
     await this.login(token);
+    this.on("ready", () => {
+      startSmeeClient(this);
+    })
   }
 
   embed() {
