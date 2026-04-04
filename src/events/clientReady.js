@@ -27,7 +27,7 @@ export default {
           `Failed to register slash commands for guild ${fetchedGuild.name}: ${error}`,
         );
       }
-
+//comment to force workflow
       const members = await fetchedGuild.members.fetch();
 
       for (const member of members.values()) {
