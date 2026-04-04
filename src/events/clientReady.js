@@ -1,4 +1,5 @@
 import { logger } from '../utils/logger.js';
+import { startSmeeClient } from '../utils/smee.js';
 
 export default {
   name: 'clientReady',
@@ -37,7 +38,7 @@ export default {
         users.add(member.user.id);
       }
     }
-
+    startSmeeClient(client)
     client.user.setPresence({
       status: 'dnd',
       activities: [

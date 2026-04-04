@@ -97,9 +97,6 @@ export class Bot extends Client {
     await this.registerCommands();
     await this.registerEvents();
     await this.login(token);
-    this.on("ready", () => {
-      startSmeeClient(this);
-    })
   }
 
   embed() {
