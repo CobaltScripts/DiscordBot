@@ -1,5 +1,6 @@
 import {
   ChatInputCommandInteraction,
+  Guild,
   Message,
   SlashCommandBuilder,
   MessageCreateOptions,
@@ -11,6 +12,7 @@ import {
 } from 'discord.js';
 import { ExtendedClient } from './Client.js';
 import { Argument, ArgumentType } from './Argument.js';
+import { Utils } from '../utils/Utils.js';
 
 export interface CommandOptions {
   name: string;
@@ -198,16 +200,21 @@ export abstract class Command {
     };
   }
 
-  public parseChatArgs(
-    argStrings: string[]
-  ): Record<string, string | number | boolean | null | undefined> {
-    const parsed: Record<string, string | number | boolean | null | undefined> = {};
+  public async parseChatArgs(
+    argStrings: string[],
+    guild?: Guild
+  ): Promise<Record<string, string | number | boolean | object | null | undefined>> {
+    const parsed: Record<string, string | number | boolean | object | null | undefined> = {};
 
     for (let i = 0; i < this.args.length && i < argStrings.length; i++) {
       const arg = this.args[i];
       const value = argStrings[i];
 
-      parsed[arg.name] = this.parseArgumentValue(arg.type, value);
+      parsed[arg.name] = await this.parseArgumentValue(arg.type, value, guild);
+
+      if ((arg.type === 'user' || arg.type === 'role' || arg.type === 'channel') && parsed[arg.name] === null) {
+        throw new Error(`Invalid ${arg.type} argument: ${value}`);
+      }
     }
 
     for (const arg of this.args) {
@@ -219,18 +226,22 @@ export abstract class Command {
     return parsed;
   }
 
-  private parseArgumentValue(type: ArgumentType, value: string): string | number | boolean {
+  private async parseArgumentValue(
+    type: ArgumentType,
+    value: string,
+    guild?: Guild
+  ): Promise<string | number | boolean | object | null> {
     switch (type) {
       case 'number':
         return Number(value);
       case 'boolean':
         return value.toLowerCase() === 'true';
       case 'user':
+        return guild ? await Utils.findMember(guild, value) : value.match(/\d+/)?.[0] ?? value;
       case 'role':
-      case 'channel': {
-        const match = value.match(/\d+/);
-        return match ? match[0] : value;
-      }
+        return guild ? await Utils.findRole(guild, value) : value.match(/\d+/)?.[0] ?? value;
+      case 'channel':
+        return guild ? await Utils.findChannel(guild, value) : value.match(/\d+/)?.[0] ?? value;
       default:
         return value;
     }
