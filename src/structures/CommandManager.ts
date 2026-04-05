@@ -17,12 +17,9 @@ export class CommandManager {
   }
 
   public async loadCommands(commandsDirectory: string): Promise<void> {
-    const commandFiles = (await readdir(commandsDirectory)).filter(
-      (file) => file.endsWith('.js') || file.endsWith('.ts')
-    );
+    const commandFiles = await this.getCommandFiles(commandsDirectory);
 
-    for (const file of commandFiles) {
-      const commandPath = join(commandsDirectory, file);
+    for (const commandPath of commandFiles) {
       const commandModule = await import(pathToFileURL(commandPath).href);
 
       if (!commandModule.default) {
@@ -38,6 +35,26 @@ export class CommandManager {
       this.commands.set(command.name, command);
       Logger.info(`Loaded command: ${command.name}`);
     }
+  }
+
+  private async getCommandFiles(directory: string): Promise<string[]> {
+    const entries = await readdir(directory, { withFileTypes: true });
+    const commandFiles: string[] = [];
+
+    for (const entry of entries) {
+      const entryPath = join(directory, entry.name);
+
+      if (entry.isDirectory()) {
+        commandFiles.push(...(await this.getCommandFiles(entryPath)));
+        continue;
+      }
+
+      if (entry.isFile() && (entry.name.endsWith('.js') || entry.name.endsWith('.ts'))) {
+        commandFiles.push(entryPath);
+      }
+    }
+
+    return commandFiles;
   }
 
   public async registerSlashCommands(): Promise<void> {

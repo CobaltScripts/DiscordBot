@@ -6,6 +6,8 @@ import {
   InteractionReplyOptions,
   InteractionEditReplyOptions,
   MessageEditOptions,
+  PermissionResolvable,
+  PermissionsBitField,
 } from 'discord.js';
 import { ExtendedClient } from './Client.js';
 import { Argument, ArgumentType } from './Argument.js';
@@ -14,6 +16,7 @@ export interface CommandOptions {
   name: string;
   description: string;
   args?: Argument[];
+  requiredPermissions?: PermissionResolvable[];
 }
 
 export interface CommandContext {
@@ -30,15 +33,23 @@ export abstract class Command {
   public readonly name: string;
   public readonly description: string;
   public readonly args: Argument[];
+  public readonly requiredPermissions: PermissionResolvable[];
 
   constructor(options: CommandOptions) {
     this.name = options.name;
     this.description = options.description;
     this.args = options.args ?? [];
+    this.requiredPermissions = options.requiredPermissions ?? [];
   }
 
   public buildSlashCommand(): SlashCommandBuilder {
     const builder = new SlashCommandBuilder().setName(this.name).setDescription(this.description);
+
+    if (this.requiredPermissions.length) {
+      builder.setDefaultMemberPermissions(
+        new PermissionsBitField(this.requiredPermissions).bitfield
+      );
+    }
 
     for (const arg of this.args) {
       this.addArgumentToBuilder(builder, arg);
@@ -115,11 +126,30 @@ export abstract class Command {
       role: 'Role',
       channel: 'Channel',
     };
-
     return typeMap[type];
   }
 
-  public abstract execute(context: CommandContext): Promise<void>;
+  public hasRequiredPermissions(memberPermissions?: Readonly<PermissionsBitField | null>): boolean {
+    if (!this.requiredPermissions.length) {
+      return true;
+    }
+
+    return memberPermissions?.has(this.requiredPermissions) ?? false;
+  }
+
+  public getMissingPermissions(memberPermissions?: Readonly<PermissionsBitField | null>): string[] {
+    if (!this.requiredPermissions.length) {
+      return [];
+    }
+
+    const missingPermissions = this.requiredPermissions.filter(
+      (permission) => !memberPermissions?.has(permission)
+    );
+
+    return new PermissionsBitField(missingPermissions).toArray();
+  }
+
+  public abstract execute(client: ExtendedClient, context: CommandContext): Promise<void>;
 
   public createContext(
     client: ExtendedClient,
@@ -132,7 +162,6 @@ export abstract class Command {
       interaction,
       message,
       args,
-
       reply: async (content: string | MessageCreateOptions | InteractionReplyOptions) => {
         if (interaction) {
           const options =
@@ -150,13 +179,11 @@ export abstract class Command {
           await message.reply(options);
         }
       },
-
       deferReply: async (ephemeral = false) => {
         if (interaction && !interaction.replied && !interaction.deferred) {
           await interaction.deferReply({ ephemeral });
         }
       },
-
       editReply: async (content: string | MessageEditOptions | InteractionEditReplyOptions) => {
         if (interaction) {
           const options =

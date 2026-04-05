@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from 'discord.js';
 import { Event } from '../structures/Event.js';
 import { ExtendedClient } from '../structures/Client.js';
-import { Logger } from '../utils/Logger.js';
+import { Embeds } from '../utils/Embeds.js';
 
 export default class InteractionCreateEvent extends Event {
   constructor() {
@@ -17,11 +17,20 @@ export default class InteractionCreateEvent extends Event {
     const command = client.commandManager?.getCommand(interaction.commandName);
 
     if (!command) {
-      Logger.warn(`Command not found: ${interaction.commandName}`);
+      return;
+    }
+
+    if (!command.hasRequiredPermissions(interaction.memberPermissions)) {
+      const missingPermissions = command.getMissingPermissions(interaction.memberPermissions);
+      const message = missingPermissions.length
+        ? `You need ${missingPermissions.join(', ')} to use this command.`
+        : 'You do not have permission to use this command.';
+
       await interaction.reply({
-        content: 'This command is not available.',
+        embeds: [Embeds.error(message)],
         ephemeral: true,
       });
+
       return;
     }
 
@@ -37,15 +46,10 @@ export default class InteractionCreateEvent extends Event {
       }
 
       const context = command.createContext(client, args, interaction);
-      await command.execute(context);
+      await command.execute(client, context);
     } catch (error) {
-      Logger.error(
-        `Error executing command ${interaction.commandName}: ${error instanceof Error ? error.message : String(error)}`
-      );
-
       const errorMessage = {
-        content: 'An error occurred while executing this command.',
-        ephemeral: true,
+        embeds: [Embeds.error(`${error instanceof Error ? error.message : 'Unknown error'}`)],
       };
 
       if (interaction.replied) {

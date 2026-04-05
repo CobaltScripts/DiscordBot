@@ -1,7 +1,7 @@
 import { Event } from '../structures/Event.js';
 import { ExtendedClient } from '../structures/Client.js';
 import { Message } from 'discord.js';
-import { Logger } from '../utils/Logger.js';
+import { Embeds } from '../utils/Embeds.js';
 
 export default class MessageCreateEvent extends Event<'messageCreate'> {
   constructor() {
@@ -22,8 +22,10 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
     const command = client.commandManager?.getCommand(commandName);
 
     if (!command) {
-      Logger.warn(`Chat command not found: ${commandName}`);
-      await message.reply('This command does not exist.');
+      return;
+    }
+
+    if (!command.hasRequiredPermissions(message.member?.permissions)) {
       return;
     }
 
@@ -31,14 +33,15 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
       const parsedArgs = command.parseChatArgs(args);
 
       const context = command.createContext(client, parsedArgs, undefined, message);
-      await command.execute(context);
+      await command.execute(client, context);
     } catch (error) {
-      Logger.error(
-        `Error executing chat command ${commandName}: ${error instanceof Error ? error.message : String(error)}`
-      );
-      await message.reply(
-        `An error occurred: ${error instanceof Error ? error.message : 'Unknown error'}`
-      );
+      await message.reply({
+        embeds: [
+          Embeds.error(
+            `${error instanceof Error ? error.message : 'Unknown error'} yes its an error`
+          ),
+        ],
+      });
     }
   }
 }
