@@ -2,7 +2,7 @@ import { Client, GatewayIntentBits } from 'discord.js';
 import { readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { Event } from './event.js';
+import { Event } from './Event.js';
 
 export interface ExtendedClientOptions {
   token: string;

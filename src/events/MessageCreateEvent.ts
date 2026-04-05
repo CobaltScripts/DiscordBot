@@ -1,5 +1,5 @@
-import { Event } from '../structures/event.js';
-import { ExtendedClient } from '../structures/client.js';
+import { Event } from '../structures/Event.js';
+import { ExtendedClient } from '../structures/Client.js';
 import { Message } from 'discord.js';
 
 export default class MessageCreateEvent extends Event<'messageCreate'> {
