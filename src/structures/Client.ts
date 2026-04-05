@@ -3,13 +3,18 @@ import { readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Event } from './Event.js';
+import { CommandManager } from './CommandManager.js';
 
 export interface ExtendedClientOptions {
   token: string;
   smeeUrl: string;
+  prefix: string;
 }
 
 export class ExtendedClient extends Client {
+  public readonly prefix: string;
+  public commandManager: CommandManager | null = null;
+
   constructor(extendedClientOptions: ExtendedClientOptions) {
     super({
       intents: [
@@ -18,6 +23,8 @@ export class ExtendedClient extends Client {
         GatewayIntentBits.MessageContent,
       ],
     });
+
+    this.prefix = extendedClientOptions.prefix;
 
     void this.start(extendedClientOptions);
   }
