@@ -29,6 +29,7 @@ export interface CommandContext {
   reply(content: string | MessageCreateOptions | InteractionReplyOptions): Promise<void>;
   deferReply(ephemeral?: boolean): Promise<void>;
   editReply(content: string | MessageEditOptions | InteractionEditReplyOptions): Promise<void>;
+  replyMessage?: Message;
 }
 
 export abstract class Command {
@@ -159,7 +160,7 @@ export abstract class Command {
     interaction?: ChatInputCommandInteraction,
     message?: Message
   ): CommandContext {
-    return {
+    const context: CommandContext = {
       client,
       interaction,
       message,
@@ -168,6 +169,7 @@ export abstract class Command {
         if (interaction) {
           const options =
             typeof content === 'string' ? { content } : (content as InteractionReplyOptions);
+          options.allowedMentions = { repliedUser: false };
           if (interaction.replied) {
             await interaction.followUp(options);
           } else if (interaction.deferred) {
@@ -178,7 +180,8 @@ export abstract class Command {
         } else if (message) {
           const options =
             typeof content === 'string' ? { content } : (content as MessageCreateOptions);
-          await message.reply(options);
+          options.allowedMentions = { repliedUser: false };
+          context.replyMessage = await message.reply(options);
         }
       },
       deferReply: async (ephemeral = false) => {
@@ -191,13 +194,14 @@ export abstract class Command {
           const options =
             typeof content === 'string' ? { content } : (content as InteractionEditReplyOptions);
           await interaction.editReply(options);
-        } else if (message) {
+        } else if (context.replyMessage) {
           const options =
             typeof content === 'string' ? { content } : (content as MessageEditOptions);
-          await message.edit(options);
+          await context.replyMessage.edit(options);
         }
       },
     };
+    return context;
   }
 
   public async parseChatArgs(
@@ -212,7 +216,10 @@ export abstract class Command {
 
       parsed[arg.name] = await this.parseArgumentValue(arg.type, value, guild);
 
-      if ((arg.type === 'user' || arg.type === 'role' || arg.type === 'channel') && parsed[arg.name] === null) {
+      if (
+        (arg.type === 'user' || arg.type === 'role' || arg.type === 'channel') &&
+        parsed[arg.name] === null
+      ) {
         throw new Error(`Invalid ${arg.type} argument: ${value}`);
       }
     }
@@ -237,11 +244,11 @@ export abstract class Command {
       case 'boolean':
         return value.toLowerCase() === 'true';
       case 'user':
-        return guild ? await Utils.findMember(guild, value) : value.match(/\d+/)?.[0] ?? value;
+        return guild ? await Utils.findMember(guild, value) : (value.match(/\d+/)?.[0] ?? value);
       case 'role':
-        return guild ? await Utils.findRole(guild, value) : value.match(/\d+/)?.[0] ?? value;
+        return guild ? await Utils.findRole(guild, value) : (value.match(/\d+/)?.[0] ?? value);
       case 'channel':
-        return guild ? await Utils.findChannel(guild, value) : value.match(/\d+/)?.[0] ?? value;
+        return guild ? await Utils.findChannel(guild, value) : (value.match(/\d+/)?.[0] ?? value);
       default:
         return value;
     }

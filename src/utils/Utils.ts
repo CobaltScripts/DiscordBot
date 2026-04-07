@@ -7,7 +7,10 @@ const DISCORD_ID_REGEX = /^\d+$/;
 
 const normalize = (value: string): string => value.trim().toLowerCase();
 
-const matchesExactOrPartial = (normalizedQuery: string, ...values: Array<string | null | undefined>): boolean => {
+const matchesExactOrPartial = (
+  normalizedQuery: string,
+  ...values: Array<string | null | undefined>
+): boolean => {
   const safeValues = values.filter((value): value is string => Boolean(value));
   return safeValues.some((value) => {
     const normalizedValue = value.toLowerCase();
@@ -113,7 +116,8 @@ export class Utils {
     const mentionChannelId = trimmedQuery.match(CHANNEL_MENTION_REGEX)?.[1] ?? null;
     const normalizedQuery = normalize(trimmedQuery);
 
-    const channels = guild.channels.cache.size > 0 ? guild.channels.cache : await guild.channels.fetch();
+    const channels =
+      guild.channels.cache.size > 0 ? guild.channels.cache : await guild.channels.fetch();
 
     for (const channel of channels.values()) {
       if (!channel) {

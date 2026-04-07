@@ -1,0 +1,22 @@
+export class Constants {
+  public static readonly GUILD_ID = '1325571365079879774'; // Cobalt Guild ID
+
+  public static readonly ROLES = {
+    UPDATES: '1445497401614925914',
+    QOTD_PING: '1445497592573067546',
+    SUPPORT: '1445887485853962300',
+    COMMUNITY: '1416251642185121823',
+  };
+
+  public static readonly CHANNELS = {
+    LOGGING_CHANNEL: '1442896999237030031',
+    COMMITS_CHANNEL: '1489996651551522816',
+  };
+
+  public static readonly TRUSTED_USER_IDS = [
+    '1441859003708866601',
+    '768481984242253904',
+    '855798460593733652',
+    '1382022366040686763',
+  ];
+}

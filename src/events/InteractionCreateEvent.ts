@@ -5,7 +5,9 @@ import { Embeds } from '../utils/Embeds.js';
 
 export default class InteractionCreateEvent extends Event {
   constructor() {
-    super({ name: 'interactionCreate' });
+    super({
+      name: 'interactionCreate',
+    });
   }
 
   public async execute(

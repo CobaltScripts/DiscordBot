@@ -36,11 +36,7 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
       await command.execute(client, context);
     } catch (error) {
       await message.reply({
-        embeds: [
-          Embeds.error(
-            `${error instanceof Error ? error.message : 'Unknown error'}`
-          ),
-        ],
+        embeds: [Embeds.error(`${error instanceof Error ? error.message : 'Unknown error'}`)],
       });
     }
   }
