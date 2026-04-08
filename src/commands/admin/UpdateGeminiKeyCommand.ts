@@ -1,4 +1,4 @@
-import { PermissionFlagsBits } from 'discord.js';
+import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { ExtendedClient } from '../../structures/Client.js';
 import { Command, CommandContext } from '../../structures/Command.js';
 import { Argument } from '../../structures/Argument.js';
@@ -35,6 +35,15 @@ export default class UpdateGeminiKeyCommand extends Command {
     }
 
     client.chatBot.updateKey(newKey);
+
+    if (context.interaction) {
+      await context.reply({
+        embeds: [Embeds.success('Gemini API key updated successfully.')],
+        flags: MessageFlags.Ephemeral,
+      });
+      
+      return;
+    }
 
     await context.reply({
       embeds: [Embeds.success('Gemini API key updated successfully.')],
