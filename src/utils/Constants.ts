@@ -11,6 +11,7 @@ export class Constants {
   public static readonly CHANNELS = {
     LOGGING_CHANNEL: '1442896999237030031',
     COMMITS_CHANNEL: '1489996651551522816',
+    BOT_ERRORS: '1491479994994659428',
   };
 
   public static readonly TRUSTED_USER_IDS = [

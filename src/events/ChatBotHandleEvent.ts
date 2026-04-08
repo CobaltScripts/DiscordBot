@@ -46,7 +46,7 @@ export default class ChatBotHandleEvent extends Event<'messageCreate'> {
 
     await message.channel.sendTyping();
 
-    const res = await client.chatBot.generateResponse(content, message.author);
+    const res = await client.chatBot.generateResponse(content, message.author, client);
 
     if (!res || res.length === 0) {
       return;

@@ -1,6 +1,8 @@
 import { GoogleGenAI } from '@google/genai';
 import { readFileSync } from 'node:fs';
 import { Logger } from './Logger.js';
+import { ExtendedClient } from '../structures/Client.js';
+import { Constants } from './Constants.js';
 
 type ChatAuthor = {
   id: string;
@@ -37,9 +39,9 @@ export class ChatBot {
     });
   }
 
-  public async generateResponse(message: string, author: ChatAuthor): Promise<string> {
+  public async generateResponse(message: string, author: ChatAuthor, client: ExtendedClient): Promise<string> {
     if (!this.chat) {
-      return 'i errored :/';
+      return 'i errored :/ (no chat?)';
     }
 
     try {
@@ -49,10 +51,11 @@ export class ChatBot {
 
       return response.text ?? 'i errored :/';
     } catch (error) {
-      Logger.error(
-        `Error generating response: ${error instanceof Error ? error.message : String(error)}`
+      Logger.discordLog(
+        `Error generating response: ${error instanceof Error ? error.message : String(error)}`,
+        client
       );
-      return 'i errored :/';
+      return 'i errored :/ (see <#' + Constants.CHANNELS.BOT_ERRORS + '>';
     }
   }
 }
