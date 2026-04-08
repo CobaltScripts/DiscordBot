@@ -1,8 +1,4 @@
 import chalk from 'chalk';
-import { Client, EmbedBuilder, TextChannel } from 'discord.js'; 
-import { ExtendedClient } from '../structures/Client.js';
-import { Embeds } from './Embeds.js';
-import { Constants } from './Constants.js';
 
 export class Logger {
   public static success(message: string): void {
@@ -32,16 +28,5 @@ export class Logger {
     return [now.getHours(), now.getMinutes(), now.getSeconds()]
       .map((v) => String(v).padStart(2, '0'))
       .join(':');
-  }
-
-  public static async discordLog(message: string, client: ExtendedClient): Promise<void> {
-    try {
-      const channels = (client as Client).channels; 
-      const channel = await channels.fetch(Constants.CHANNELS.BOT_ERRORS);
-
-      if (!channel || !channel.isTextBased()) return;
-      const embed = Embeds.error(message)
-      await (channel as TextChannel).send({embeds: [embed]}) // FUCK TYPESCRIPT
-    } catch (error) {}
   }
 }
