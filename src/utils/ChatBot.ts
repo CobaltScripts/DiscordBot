@@ -1,4 +1,4 @@
-import { GoogleGenAI } from '@google/genai';
+import { ApiError, GoogleGenAI } from '@google/genai';
 import { readFileSync } from 'node:fs';
 import { Logger } from './Logger.js';
 import { ExtendedClient } from '../structures/Client.js';
@@ -52,7 +52,7 @@ export class ChatBot {
       return response.text ?? 'i errored :/';
     } catch (error) {
       Logger.discordLog(
-        `Error generating response: ${error instanceof Error ? error.message : String(error)}`,
+        `Error generating response: ${error instanceof ApiError ? error.message : String(error)}`,
         client
       );
       return 'i errored :/ (see <#' + Constants.CHANNELS.BOT_ERRORS + '>)';
