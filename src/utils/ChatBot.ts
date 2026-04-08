@@ -55,7 +55,7 @@ export class ChatBot {
         `Error generating response: ${error instanceof Error ? error.message : String(error)}`,
         client
       );
-      return 'i errored :/ (see <#' + Constants.CHANNELS.BOT_ERRORS + '>';
+      return 'i errored :/ (see <#' + Constants.CHANNELS.BOT_ERRORS + '>)';
     }
   }
 }
