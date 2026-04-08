@@ -10,11 +10,14 @@ type ChatAuthor = {
   username: string;
 };
 
+type OllamaMessage = { role: string; content: string };
+
 export class ChatBot {
   private apiKey: string;
   private client: GoogleGenAI;
   private context = '';
   private chat: ReturnType<GoogleGenAI['chats']['create']> | null = null;
+  private localHistory: OllamaMessage[] = [];
   public useLocalLLM: boolean = false;
 
   constructor(apiKey: string) {
@@ -35,7 +38,7 @@ export class ChatBot {
     } catch (e) {
       this.context = "You are a helpful assistant.";
     }
-
+    this.localHistory = [];
     this.chat = this.client.chats.create({
       model: 'gemini-2.0-flash-lite',
       config: {
@@ -48,49 +51,49 @@ export class ChatBot {
     if (this.useLocalLLM) {
       return await this.generateLocalResponse(message, author, client);
     }
-
     if (!this.chat) return 'i errored :/ (no chat?)';
-
     try {
       const response = await this.chat.sendMessage({
         message: `[Discord Id: ${author.id}, Discord Name: ${author.username}] says "${message}"`,
       });
-
       return response.text ?? 'i errored :/';
     } catch (error: any) {
       let cleanMessage = error.message;
       if (error.message?.includes('{')) {
-          try {
-              const parsed = JSON.parse(error.message.substring(error.message.indexOf('{')));
-              cleanMessage = parsed.error?.message || "Quota Exceeded/API Error";
-          } catch {
-              cleanMessage = error.message.split('\n')[0];
-          }
+        try {
+          const parsed = JSON.parse(error.message.substring(error.message.indexOf('{')));
+          cleanMessage = parsed.error?.message || "Quota Exceeded/API Error";
+        } catch {
+          cleanMessage = error.message.split('\n')[0];
+        }
       }
-
-      void Logger.discordLog(
-        `Error generating response: ${cleanMessage}`,
-        client
-      );
+      void Logger.discordLog(`Error generating response: ${cleanMessage}`, client);
       return 'i errored :/ (see <#' + Constants.CHANNELS.BOT_ERRORS + '>)';
     }
   }
 
   private async generateLocalResponse(message: string, author: ChatAuthor, client: ExtendedClient): Promise<string> {
     try {
+      this.localHistory.push({
+        role: 'user',
+        content: `[Discord Id: ${author.id}, Discord Name: ${author.username}] says "${message}"`,
+      });
+
       const response = await ollama.chat({
         model: 'qwen2.5:0.5b',
         messages: [
           { role: 'system', content: this.context },
-          { role: 'user', content: `[Discord Id: ${author.id}, Discord Name: ${author.username}] says "${message}"` }
+          ...this.localHistory,
         ],
         keep_alive: "5m",
         options: {
-            num_ctx: 2048
-        }
+          num_ctx: 2048,
+        },
       });
 
-      return response.message.content;
+      const reply = response.message.content;
+      this.localHistory.push({ role: 'assistant', content: reply });
+      return reply;
     } catch (error) {
       void Logger.discordLog(`Local LLM Error: ${error instanceof Error ? error.message : String(error)}`, client);
       return 'local ai errored (is ollama running?)';
