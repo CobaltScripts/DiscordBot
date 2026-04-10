@@ -35,6 +35,7 @@ export default class MuteCommand extends Command {
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.interaction?.guild ?? context.message?.guild;
+    const author = context.interaction?.user ?? context.message?.author;
 
     if (!guild) {
       return await context.reply({
@@ -59,7 +60,7 @@ export default class MuteCommand extends Command {
     }
 
     try {
-      await user.timeout(durationMs, context.args.reason as string | undefined);
+      await user.timeout(durationMs, `${author?.tag}: ${context.args.reason as string | undefined}`);
 
       await context.reply({
         embeds: [Embeds.success(`${user.user.tag} has been muted for ${durationString}.`)],
