@@ -10,7 +10,7 @@ export default class PingCommand extends Command {
     });
   }
 
-  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     await context.reply({
       embeds: [Embeds.info('🏓 Pong!')],
     });

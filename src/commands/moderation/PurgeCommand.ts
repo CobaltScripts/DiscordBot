@@ -21,7 +21,7 @@ export default class PurgeCommand extends Command {
     });
   }
 
-  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.interaction?.guild ?? context.message?.guild;
     const author = context.interaction?.user ?? context.message?.author;
 

@@ -33,7 +33,7 @@ export default class MuteCommand extends Command {
     });
   }
 
-  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.interaction?.guild ?? context.message?.guild;
 
     if (!guild) {

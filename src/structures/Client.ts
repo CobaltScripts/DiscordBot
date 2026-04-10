@@ -13,7 +13,7 @@ import { Logger } from '@utils/Logger.js';
 export interface ExtendedClientOptions {
   token: string;
   smeeUrl: string;
-  geminiApiKey: string;
+  mistralApiKey: string;
   prefix: string;
 }
 
@@ -42,7 +42,7 @@ export class ExtendedClient extends Client {
     });
 
     this.prefix = extendedClientOptions.prefix;
-    this.chatBot = new ChatBot(this, extendedClientOptions.geminiApiKey);
+    this.chatBot = new ChatBot(this, extendedClientOptions.mistralApiKey);
     this.smeeClient = new SmeeClient({
       source: extendedClientOptions.smeeUrl,
       channelId: Constants.CHANNELS.COMMITS_CHANNEL,

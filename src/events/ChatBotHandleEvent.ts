@@ -30,20 +30,6 @@ export default class ChatBotHandleEvent extends Event<'messageCreate'> {
       return;
     }
 
-    if (
-      message.member?.permissions.has(PermissionFlagsBits.Administrator) &&
-      content.includes('dev reset')
-    ) {
-      client.chatBot.reset();
-
-      await message.reply({
-        content: 'Sir yes sir! 🫡',
-        allowedMentions: { repliedUser: false },
-      });
-
-      return;
-    }
-
     await message.channel.sendTyping();
 
     const res = await client.chatBot.generateResponse(content, message.author);
