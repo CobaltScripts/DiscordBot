@@ -1,7 +1,7 @@
 import { GoogleGenAI } from '@google/genai';
 import { readFileSync } from 'node:fs';
-import { ExtendedClient } from '../structures/Client.js';
-import { Constants } from './Constants.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Constants } from '@utils/Constants.js';
 
 type ChatAuthor = {
   id: string;

@@ -1,8 +1,8 @@
 import { PermissionFlagsBits } from 'discord.js';
-import { ExtendedClient } from '../../structures/Client.js';
-import { Command, CommandContext } from '../../structures/Command.js';
-import { Embeds } from '../../utils/Embeds.js';
-import { Argument } from '../../structures/Argument.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command, CommandContext } from '@structures/Command.js';
+import { Embeds } from '@utils/Embeds.js';
+import { Argument } from '@structures/Argument.js';
 
 export default class KickCommand extends Command {
   constructor() {

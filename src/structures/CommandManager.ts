@@ -2,9 +2,9 @@ import { readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { REST, Routes } from 'discord.js';
-import { ExtendedClient } from './Client.js';
-import { Command } from './Command.js';
-import { Logger } from '../utils/Logger.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command } from '@structures/Command.js';
+import { Logger } from '@utils/Logger.js';
 
 export class CommandManager {
   private commands: Map<string, Command> = new Map();

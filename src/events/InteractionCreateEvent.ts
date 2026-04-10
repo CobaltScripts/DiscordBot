@@ -1,7 +1,7 @@
 import { ChatInputCommandInteraction } from 'discord.js';
-import { Event } from '../structures/Event.js';
-import { ExtendedClient } from '../structures/Client.js';
-import { Embeds } from '../utils/Embeds.js';
+import { Event } from '@structures/Event.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Embeds } from '@utils/Embeds.js';
 
 export default class InteractionCreateEvent extends Event {
   constructor() {

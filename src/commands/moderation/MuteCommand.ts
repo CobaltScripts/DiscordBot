@@ -1,8 +1,8 @@
-import { Argument } from '../../structures/Argument.js';
-import { ExtendedClient } from '../../structures/Client.js';
-import { Command, CommandContext } from '../../structures/Command.js';
+import { Argument } from '@structures/Argument.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command, CommandContext } from '@structures/Command.js';
 import { PermissionsBitField } from 'discord.js';
-import { Embeds } from '../../utils/Embeds.js';
+import { Embeds } from '@utils/Embeds.js';
 
 export default class MuteCommand extends Command {
   constructor() {

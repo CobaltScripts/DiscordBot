@@ -1,5 +1,5 @@
 import 'dotenv/config';
-import { ExtendedClient } from './structures/Client.js';
+import { ExtendedClient } from '@structures/Client.js';
 
 new ExtendedClient({
   token: process.env.DISCORD_TOKEN!,
