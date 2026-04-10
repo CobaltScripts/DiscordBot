@@ -1,5 +1,9 @@
+# Node.js
 node_modules
+package.json
+package-lock.json
+
 dist
 .git
-package.json
 tsconfig.json
+*.md
