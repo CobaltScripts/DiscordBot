@@ -9,8 +9,13 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
-    "rootDir": "./src",
-    "outDir": "./dist"
+    "outDir": "./dist",
+    "paths": {
+      "@commands/*": ["./src/commands/*"],
+      "@events/*": ["./src/events/*"],
+      "@structures/*": ["./src/structures/*"],
+      "@utils/*": ["./src/utils/*"]
+    }
   },
   "include": ["src"],
   "exclude": ["node_modules"]

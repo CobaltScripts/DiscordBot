@@ -1,5 +1,5 @@
-import { Event } from '../structures/Event.js';
-import { ExtendedClient } from '../structures/Client.js';
+import { Event } from '@structures/Event.js';
+import { ExtendedClient } from '@structures/Client.js';
 import { Message, PermissionFlagsBits } from 'discord.js';
 import homoglyphSearch from 'homoglyph-search';
 

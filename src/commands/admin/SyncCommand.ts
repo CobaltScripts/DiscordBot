@@ -1,8 +1,8 @@
 import { PermissionFlagsBits } from 'discord.js';
-import { ExtendedClient } from '../../structures/Client.js';
-import { Command, CommandContext } from '../../structures/Command.js';
-import { Constants } from '../../utils/Constants.js';
-import { Embeds } from '../../utils/Embeds.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command, CommandContext } from '@structures/Command.js';
+import { Constants } from '@utils/Constants.js';
+import { Embeds } from '@utils/Embeds.js';
 
 export default class SyncCommand extends Command {
   constructor() {

@@ -1,6 +1,6 @@
-import { ExtendedClient } from '../../structures/Client.js';
-import { Command, CommandContext } from '../../structures/Command.js';
-import { Embeds } from '../../utils/Embeds.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command, CommandContext } from '@structures/Command.js';
+import { Embeds } from '@utils/Embeds.js';
 
 export default class PingCommand extends Command {
   constructor() {

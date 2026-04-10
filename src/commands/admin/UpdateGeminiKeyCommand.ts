@@ -1,8 +1,8 @@
 import { MessageFlags, PermissionFlagsBits } from 'discord.js';
-import { ExtendedClient } from '../../structures/Client.js';
-import { Command, CommandContext } from '../../structures/Command.js';
-import { Argument } from '../../structures/Argument.js';
-import { Embeds } from '../../utils/Embeds.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Command, CommandContext } from '@structures/Command.js';
+import { Argument } from '@structures/Argument.js';
+import { Embeds } from '@utils/Embeds.js';
 
 export default class UpdateGeminiKeyCommand extends Command {
   constructor() {

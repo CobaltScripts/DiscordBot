@@ -1,8 +1,8 @@
-import { Event } from '../structures/Event.js';
-import { ExtendedClient } from '../structures/Client.js';
+import { Event } from '@structures/Event.js';
+import { ExtendedClient } from '@structures/Client.js';
 import { ButtonInteraction, GuildMember, MessageFlags } from 'discord.js';
-import { Embeds } from '../utils/Embeds.js';
-import { Logger } from '../utils/Logger.js';
+import { Embeds } from '@utils/Embeds.js';
+import { Logger } from '@utils/Logger.js';
 
 export default class ReactionRoleHandleEvent extends Event<'interactionCreate'> {
   constructor() {

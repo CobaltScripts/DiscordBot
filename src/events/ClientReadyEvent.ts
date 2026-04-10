@@ -1,10 +1,10 @@
-import { Event } from '../structures/Event.js';
-import { ExtendedClient } from '../structures/Client.js';
-import { Logger } from '../utils/Logger.js';
-import { CommandManager } from '../structures/CommandManager.js';
+import { Event } from '@structures/Event.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Logger } from '@utils/Logger.js';
+import { CommandManager } from '@structures/CommandManager.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Constants } from '../utils/Constants.js';
+import { Constants } from '@utils/Constants.js';
 
 export default class ClientReadyEvent extends Event<'clientReady'> {
   constructor() {

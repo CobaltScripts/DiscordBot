@@ -10,9 +10,9 @@ import {
   PermissionResolvable,
   PermissionsBitField,
 } from 'discord.js';
-import { ExtendedClient } from './Client.js';
-import { Argument, ArgumentType } from './Argument.js';
-import { Utils } from '../utils/Utils.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Argument, ArgumentType } from '@structures/Argument.js';
+import { Utils } from '@utils/Utils.js';
 
 export interface CommandOptions {
   name: string;
