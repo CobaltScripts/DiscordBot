@@ -16,7 +16,7 @@ export default class DevResetCommand extends Command {
     client.chatBot.reset();
 
     await context.reply({
-      embeds: [Embeds.success('Successfully reset chatbot.')]
+      embeds: [Embeds.success('Successfully reset chatbot.')],
     });
   }
 }

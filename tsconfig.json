@@ -9,6 +9,7 @@
     "skipLibCheck": true,
     "strictNullChecks": true,
     "resolveJsonModule": true,
+    "rootDir": "./src",
     "outDir": "./dist",
     "paths": {
       "@commands/*": ["./src/commands/*"],
