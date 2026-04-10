@@ -41,7 +41,7 @@ export default class UpdateGeminiKeyCommand extends Command {
         embeds: [Embeds.success('Gemini API key updated successfully.')],
         flags: MessageFlags.Ephemeral,
       });
-      
+
       return;
     }
 
