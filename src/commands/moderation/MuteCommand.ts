@@ -60,7 +60,10 @@ export default class MuteCommand extends Command {
     }
 
     try {
-      await user.timeout(durationMs, `${author?.tag}: ${context.args.reason as string | undefined}`);
+      await user.timeout(
+        durationMs,
+        `${author?.tag}: ${context.args.reason as string | undefined}`
+      );
 
       await context.reply({
         embeds: [Embeds.success(`${user.user.tag} has been muted for ${durationString}.`)],
