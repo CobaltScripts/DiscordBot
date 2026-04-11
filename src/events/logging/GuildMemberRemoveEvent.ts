@@ -2,7 +2,7 @@ import { Event } from '@structures/Event.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { GuildMember } from 'discord.js';
 import { getDataForGuild } from '@data/DataStore.js';
-import { buildGuildMemberLogEmbed, sendGuildMemberLogEmbed } from '../../utils/GuildMemberLog.js';
+import { buildGuildMemberLogEmbed } from '../../utils/GuildMemberLog.js';
 
 export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
   constructor() {
@@ -27,8 +27,13 @@ export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
       `${member.user.toString()} has left the server.`
     );
 
-    await sendGuildMemberLogEmbed(guild, data.channels.logging, embed);
+    const channel = guild.channels.cache.get(data.channels.logging);
+
+    if (!channel || !channel.isTextBased()) {
+      return;
+    }
 
     client.updatePresence();
+    await channel.send({ embeds: [embed] });
   }
 }

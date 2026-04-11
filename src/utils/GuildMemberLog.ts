@@ -25,17 +25,3 @@ export function buildGuildMemberLogEmbed(
     .setFooter({ text: `User ID: ${member.user.id}` })
     .setTimestamp();
 }
-
-export async function sendGuildMemberLogEmbed(
-  guild: Guild,
-  channelId: string,
-  embed: EmbedBuilder
-): Promise<void> {
-  const channel = guild.channels.cache.get(channelId);
-
-  if (!channel || !channel.isTextBased()) {
-    return;
-  }
-
-  await channel.send({ embeds: [embed] });
-}

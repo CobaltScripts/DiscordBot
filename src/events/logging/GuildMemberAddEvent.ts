@@ -4,7 +4,7 @@ import { GuildMember } from 'discord.js';
 import { getDataForGuild, GuildData } from '@data/DataStore.js';
 import { Logger } from '@utils/Logger.js';
 import { isErrorWithMessage } from '@utils/ErrorUtil.js';
-import { buildGuildMemberLogEmbed, sendGuildMemberLogEmbed } from '../../utils/GuildMemberLog.js';
+import { buildGuildMemberLogEmbed } from '../../utils/GuildMemberLog.js';
 
 export default class GuildMemberAddEvent extends Event<'guildMemberAdd'> {
   constructor() {
@@ -33,9 +33,14 @@ export default class GuildMemberAddEvent extends Event<'guildMemberAdd'> {
       `${member.user.toString()} has joined the server.`
     );
 
-    await sendGuildMemberLogEmbed(guild, data.channels.logging, embed);
-    await member.roles.add(data.roles.community);
+    const channel = guild.channels.cache.get(data.channels.logging);
+
+    if (!channel || !channel.isTextBased()) {
+      return;
+    }
 
     client.updatePresence();
+    await member.roles.add(data.roles.community);
+    await channel.send({ embeds: [embed] });
   }
 }
