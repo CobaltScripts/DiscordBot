@@ -3,7 +3,7 @@ type RoleTypes = 'updates' | 'qotd' | 'support' | 'community';
 import * as fs from 'fs';
 import { GUILD_SETTINGS_FILE } from '@data/Config.js';
 import { CommandContext } from '@structures/Command.js';
-import { Guild } from 'discord.js';
+import { validateGuildSettingsFile } from '../utils/JsonValidation.js';
 
 export class GuildData {
   readonly guildId: string;
@@ -44,10 +44,12 @@ export class GuildData {
 
 export let dataStore: GuildData[] = loadFromJson(GUILD_SETTINGS_FILE);
 
-function loadFromJson(jsonFilePath: string) {
+function loadFromJson(jsonFilePath: string): GuildData[] {
   const fileContent = fs.readFileSync(jsonFilePath, 'utf-8');
-  const data = JSON.parse(fileContent);
-  const values = [];
+  const data = JSON.parse(fileContent) as unknown;
+  validateGuildSettingsFile(data, jsonFilePath);
+
+  const values: GuildData[] = [];
   for (const guildId of Object.keys(data)) {
     const guildObj = data[guildId];
     const guildData = new GuildData(guildId);

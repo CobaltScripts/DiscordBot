@@ -16,6 +16,8 @@ export class CommandManager {
 
   public async loadCommands(commandsDirectory: string): Promise<void> {
     const commandFiles = await this.getCommandFiles(commandsDirectory);
+    const separator: string = ', ';
+    let loadedCommands: string = '';
 
     for (const commandPath of commandFiles) {
       const commandModule = await import(pathToFileURL(commandPath).href);
@@ -31,8 +33,9 @@ export class CommandManager {
       }
 
       this.commands.set(command.name, command);
-      Logger.info(`Loaded command: ${command.name}`);
+      loadedCommands += command.name + separator;
     }
+    Logger.info(`Loaded commands: ${loadedCommands.slice(0, 0 - separator.length)}`);
   }
 
   private async getCommandFiles(directory: string): Promise<string[]> {
