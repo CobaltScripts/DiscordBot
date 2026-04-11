@@ -1,7 +1,6 @@
 import { Event } from '@structures/Event.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { EmbedBuilder, GuildMember } from 'discord.js';
-import { Constants } from '@utils/Constants.js';
 
 export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
   constructor() {

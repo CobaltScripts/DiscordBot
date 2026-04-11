@@ -9,11 +9,9 @@ import { Logger } from '@utils/Logger.js';
 export class CommandManager {
   private commands: Map<string, Command> = new Map();
   private readonly client: ExtendedClient;
-  private readonly guildId?: string;
 
-  constructor(client: ExtendedClient, guildId?: string) {
+  constructor(client: ExtendedClient) {
     this.client = client;
-    this.guildId = guildId;
   }
 
   public async loadCommands(commandsDirectory: string): Promise<void> {
@@ -67,19 +65,11 @@ export class CommandManager {
     try {
       Logger.info(`Registering ${slashCommands.length} slash commands...`);
 
-      if (this.guildId) {
-        await rest.put(Routes.applicationGuildCommands(this.client.user!.id, this.guildId), {
-          body: slashCommands,
-        });
+      await rest.put(Routes.applicationCommands(this.client.user!.id), {
+        body: slashCommands,
+      });
 
-        Logger.success(`Slash commands registered to guild: ${this.guildId}`);
-      } else {
-        await rest.put(Routes.applicationCommands(this.client.user!.id), {
-          body: slashCommands,
-        });
-
-        Logger.success('Slash commands registered globally');
-      }
+      Logger.success('Slash commands registered globally');
     } catch (error) {
       Logger.error(
         `Failed to register slash commands: ${error instanceof Error ? error.message : String(error)}`

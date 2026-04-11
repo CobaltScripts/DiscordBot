@@ -1,7 +1,7 @@
 import { Mistral } from '@mistralai/mistralai';
 import { readFileSync } from 'node:fs';
 import { ExtendedClient } from '@structures/Client.js';
-import { Constants } from '@utils/Constants.js';
+import { COBALT_GUILD_ID } from '@data/Config.js';
 
 type ChatAuthor = {
   id: string;
@@ -37,7 +37,8 @@ export class ChatBot {
 
   public reset(): void {
     this.context =
-      readFileSync(new URL('../../data/context.txt', import.meta.url), 'utf8').toString() || '';
+      readFileSync(new URL('../../resources/context.txt', import.meta.url), 'utf8').toString() ||
+      '';
 
     this.messages = [
       {

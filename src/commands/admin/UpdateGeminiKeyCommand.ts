@@ -25,7 +25,7 @@ export default class UpdateGeminiKeyCommand extends Command {
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const author = context.author!;
-    const data = ds.getDataForId(context.guild);
+    const data = ds.getDataFromContext(context);
 
     if (!data) {
       await context.reply({

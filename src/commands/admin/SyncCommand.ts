@@ -16,7 +16,7 @@ export default class SyncCommand extends Command {
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
-    const data = ds.getDataForId(guild);
+    const data = ds.getDataFromContext(context);
 
     if (!data) {
       return await context.reply({

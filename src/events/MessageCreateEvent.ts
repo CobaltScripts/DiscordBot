@@ -33,7 +33,7 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
       const parsedArgs = await command.parseChatArgs(args, message.guild ?? undefined);
 
       const context = command.createContext(client, parsedArgs, undefined, message);
-      await command.execute(client, context);
+      await command.run(client, context);
     } catch (error) {
       await message.reply({
         embeds: [Embeds.error(`${error instanceof Error ? error.message : 'Unknown error'}`)],

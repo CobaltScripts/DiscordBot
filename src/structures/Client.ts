@@ -4,11 +4,12 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Event } from '@structures/Event.js';
 import { CommandManager } from '@structures/CommandManager.js';
-import { Constants } from '@utils/Constants.js';
 import { SmeeClient } from '@utils/SmeeClient.js';
 import { ChatBot } from '@utils/ChatBot.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Logger } from '@utils/Logger.js';
+import { COBALT_GUILD_ID } from '@data/Config.js';
+import { dataStore } from '@data/DataStore.js';
 
 export interface ExtendedClientOptions {
   token: string;
@@ -45,7 +46,9 @@ export class ExtendedClient extends Client {
     this.chatBot = new ChatBot(this, extendedClientOptions.mistralApiKey);
     this.smeeClient = new SmeeClient({
       source: extendedClientOptions.smeeUrl,
-      channelId: Constants.CHANNELS.COMMITS_CHANNEL,
+      channelIds: dataStore
+        .map((guildStore) => guildStore.channels.commits)
+        .filter((channelId) => channelId.length > 0),
       target: 'http://localhost:6242/webhook',
       port: 6242,
     });
@@ -55,7 +58,7 @@ export class ExtendedClient extends Client {
 
   public updatePresence(): void {
     const cobaltGuild = this.guilds.cache.find((guild) => {
-      return guild.id == Constants.GUILD_ID;
+      return guild.id == COBALT_GUILD_ID;
     });
 
     this.user?.setPresence({
@@ -69,16 +72,13 @@ export class ExtendedClient extends Client {
     });
   }
 
-  public async logError(message: string): Promise<void> {
+  public static async logError(message: string, channel: TextChannel): Promise<void> {
     try {
-      const guild = this.guilds.cache.get(Constants.GUILD_ID);
-      const channel = guild?.channels.cache.get(Constants.CHANNELS.BOT_ERRORS);
-
       if (!channel || !channel.isTextBased()) {
         return;
       }
 
-      await (channel as TextChannel).send({
+      await channel.send({
         embeds: [Embeds.error(message)],
       });
     } catch (error) {

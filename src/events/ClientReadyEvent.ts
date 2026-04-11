@@ -4,7 +4,6 @@ import { Logger } from '@utils/Logger.js';
 import { CommandManager } from '@structures/CommandManager.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { Constants } from '@utils/Constants.js';
 
 export default class ClientReadyEvent extends Event<'clientReady'> {
   constructor() {
@@ -18,7 +17,7 @@ export default class ClientReadyEvent extends Event<'clientReady'> {
     Logger.success(`Logged in as ${client.user?.tag}`);
 
     const commandsDirectory = join(dirname(fileURLToPath(import.meta.url)), '..', 'commands');
-    const commandManager = new CommandManager(client, Constants.GUILD_ID);
+    const commandManager = new CommandManager(client);
 
     await commandManager.loadCommands(commandsDirectory);
 
