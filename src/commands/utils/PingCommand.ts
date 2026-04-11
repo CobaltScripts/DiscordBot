@@ -1,5 +1,5 @@
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
 
 export default class PingCommand extends Command {
@@ -7,6 +7,7 @@ export default class PingCommand extends Command {
     super({
       name: 'ping',
       description: 'Check the bot latency',
+      checkFlags: CommandCheckFlags.None,
     });
   }
 

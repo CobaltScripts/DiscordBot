@@ -1,9 +1,9 @@
 import { MessageFlags, PermissionFlagsBits } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Argument } from '@structures/Argument.js';
 import { Embeds } from '@utils/Embeds.js';
-import { Constants } from '@utils/Constants.js';
+import * as ds from '@data/DataStore.js';
 
 export default class UpdateGeminiKeyCommand extends Command {
   constructor() {
@@ -11,6 +11,7 @@ export default class UpdateGeminiKeyCommand extends Command {
       name: 'updategeminikey',
       description: 'Update the Gemini API key',
       requiredPermissions: [PermissionFlagsBits.Administrator],
+      checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
       args: [
         new Argument({
           name: 'key',
@@ -23,17 +24,18 @@ export default class UpdateGeminiKeyCommand extends Command {
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const author = context.interaction?.user || context.message?.author;
+    const author = context.author!;
+    const data = ds.getDataForId(context.guild);
 
-    if (!author) {
+    if (!data) {
       await context.reply({
-        embeds: [Embeds.error('Unable to identify the command author.')],
+        embeds: [Embeds.error('Something went wrong, please try again later.')],
       });
 
       return;
     }
 
-    if (!Constants.TRUSTED_USER_IDS.includes(author.id)) {
+    if (!data.trusted.includes(author.id)) {
       await context.reply({
         embeds: [Embeds.error('You are not authorized to use this command.')],
       });

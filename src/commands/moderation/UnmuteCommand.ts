@@ -1,6 +1,6 @@
 import { Argument } from '@structures/Argument.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { PermissionsBitField } from 'discord.js';
 import { Embeds } from '@utils/Embeds.js';
 
@@ -10,6 +10,7 @@ export default class UnmuteCommand extends Command {
       name: 'unmute',
       description: 'Unmute a user',
       requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
+      checkFlags: CommandCheckFlags.Guild,
       args: [
         new Argument({
           name: 'user',
@@ -28,13 +29,7 @@ export default class UnmuteCommand extends Command {
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const guild = context.interaction?.guild ?? context.message?.guild;
-
-    if (!guild) {
-      return await context.reply({
-        embeds: [Embeds.error('This command can only be used in a server.')],
-      });
-    }
+    const guild = context.guild!;
 
     const user = guild.members.cache.get(context.args.user as string);
 
