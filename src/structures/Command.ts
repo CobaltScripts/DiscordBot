@@ -19,16 +19,15 @@ import { Utils } from '@utils/Utils.js';
 export interface CommandOptions {
   name: string;
   description: string;
+  checkFlags: CommandCheckFlags;
   args?: Argument[];
   requiredPermissions?: PermissionResolvable[];
-  checkFlags?: CommandCheckFlags;
 }
 
 export enum CommandCheckFlags {
   None = 0,
   Author = 1 << 0,
   Guild = 1 << 1,
-  Default = Author | Guild,
 }
 
 export interface CommandContext {
@@ -56,7 +55,7 @@ export abstract class Command {
     this.description = options.description;
     this.args = options.args ?? [];
     this.requiredPermissions = options.requiredPermissions ?? [];
-    this.checkFlags = options.checkFlags ?? CommandCheckFlags.Default;
+    this.checkFlags = options.checkFlags;
   }
 
   public buildSlashCommand(): SlashCommandBuilder {

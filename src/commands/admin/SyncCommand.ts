@@ -9,8 +9,8 @@ export default class SyncCommand extends Command {
     super({
       name: 'sync',
       description: "Cleanup each member's roles",
-      requiredPermissions: [PermissionFlagsBits.Administrator],
       checkFlags: CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.Administrator],
     });
   }
 

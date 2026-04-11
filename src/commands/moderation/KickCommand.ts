@@ -9,8 +9,8 @@ export default class KickCommand extends Command {
     super({
       name: 'kick',
       description: 'Kick a user from the server',
-      requiredPermissions: [PermissionFlagsBits.KickMembers],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.KickMembers],
       args: [
         new Argument({
           name: 'user',

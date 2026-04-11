@@ -9,8 +9,8 @@ export default class DevResetCommand extends Command {
     super({
       name: 'devreset',
       description: 'Reset the chat bot',
-      requiredPermissions: [PermissionsBitField.Flags.Administrator],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionsBitField.Flags.Administrator],
     });
   }
 

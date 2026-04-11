@@ -9,8 +9,8 @@ export default class LockCommand extends Command {
     super({
       name: 'lock',
       description: 'Lock a channel',
-      requiredPermissions: [PermissionFlagsBits.ManageChannels],
       checkFlags: CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.ManageChannels],
       args: [
         new Argument({
           name: 'channel',

@@ -9,8 +9,8 @@ export default class MuteCommand extends Command {
     super({
       name: 'mute',
       description: 'Mute a user',
-      requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
       args: [
         new Argument({
           name: 'user',

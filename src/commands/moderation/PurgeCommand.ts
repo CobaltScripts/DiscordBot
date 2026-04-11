@@ -9,8 +9,8 @@ export default class PurgeCommand extends Command {
     super({
       name: 'purge',
       description: 'Purge and recreate a channel',
-      requiredPermissions: [PermissionFlagsBits.ManageChannels],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.ManageChannels],
       args: [
         new Argument({
           name: 'channel',

@@ -10,8 +10,8 @@ export default class UpdateGeminiKeyCommand extends Command {
     super({
       name: 'updategeminikey',
       description: 'Update the Gemini API key',
-      requiredPermissions: [PermissionFlagsBits.Administrator],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.Administrator],
       args: [
         new Argument({
           name: 'key',

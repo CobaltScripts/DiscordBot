@@ -9,8 +9,8 @@ export default class RoleCommand extends Command {
     super({
       name: 'role',
       description: 'Give or remove a role from a user',
-      requiredPermissions: [PermissionFlagsBits.ManageRoles],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.ManageRoles],
       args: [
         new Argument({
           name: 'user',

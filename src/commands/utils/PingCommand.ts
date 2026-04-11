@@ -6,8 +6,8 @@ export default class PingCommand extends Command {
   constructor() {
     super({
       name: 'ping',
-      description: 'Check the bot latency',
       checkFlags: CommandCheckFlags.None,
+      description: 'Check the bot latency',
     });
   }
 

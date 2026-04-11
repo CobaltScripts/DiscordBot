@@ -9,8 +9,8 @@ export default class UnmuteCommand extends Command {
     super({
       name: 'unmute',
       description: 'Unmute a user',
-      requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
       checkFlags: CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
       args: [
         new Argument({
           name: 'user',

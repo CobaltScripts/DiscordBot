@@ -9,8 +9,8 @@ export default class ShutdownCommand extends Command {
     super({
       name: 'shutdown',
       description: 'Shut down the bot',
-      requiredPermissions: [PermissionsBitField.Flags.Administrator],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionsBitField.Flags.Administrator],
     });
   }
 

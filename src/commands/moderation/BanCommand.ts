@@ -9,8 +9,8 @@ export default class BanCommand extends Command {
     super({
       name: 'ban',
       description: 'Ban a user from the server',
-      requiredPermissions: [PermissionFlagsBits.BanMembers],
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+      requiredPermissions: [PermissionFlagsBits.BanMembers],
       args: [
         new Argument({
           name: 'user',

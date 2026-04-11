@@ -9,8 +9,8 @@ export default class ClearCommand extends Command {
     super({
       name: 'clear',
       description: 'Clear messages from a channel',
-      requiredPermissions: [PermissionFlagsBits.ManageMessages],
       checkFlags: CommandCheckFlags.None,
+      requiredPermissions: [PermissionFlagsBits.ManageMessages],
       args: [
         new Argument({
           name: 'amount',
