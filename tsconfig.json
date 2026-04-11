@@ -15,7 +15,8 @@
       "@commands/*": ["./src/commands/*"],
       "@events/*": ["./src/events/*"],
       "@structures/*": ["./src/structures/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@utils/*": ["./src/utils/*"],
+      "@data/*": ["./src/data/*"]
     }
   },
   "include": ["src"],

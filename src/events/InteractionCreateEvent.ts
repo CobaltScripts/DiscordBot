@@ -48,7 +48,7 @@ export default class InteractionCreateEvent extends Event {
       }
 
       const context = command.createContext(client, args, interaction);
-      await command.execute(client, context);
+      await command.run(client, context);
     } catch (error) {
       const errorMessage = {
         embeds: [Embeds.error(`${error instanceof Error ? error.message : 'Unknown error'}`)],

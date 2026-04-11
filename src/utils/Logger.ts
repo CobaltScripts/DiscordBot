@@ -1,4 +1,8 @@
 import chalk from 'chalk';
+import { Client, Guild, TextChannel } from 'discord.js';
+import { Embeds } from './Embeds.js';
+import { getDataForGuild } from '@data/DataStore.js';
+import { ExtendedClient } from '@structures/Client.js';
 
 export class Logger {
   public static success(message: string): void {
@@ -28,5 +32,23 @@ export class Logger {
     return [now.getHours(), now.getMinutes(), now.getSeconds()]
       .map((v) => String(v).padStart(2, '0'))
       .join(':');
+  }
+
+  public static async logErrorWithBot(message: string, guild: Guild): Promise<void> {
+    const channel = await guild.channels.fetch(getDataForGuild(guild.id).channels.errors);
+
+    try {
+      if (!channel || !channel.isTextBased()) {
+        return;
+      }
+
+      await channel.send({
+        embeds: [Embeds.error(message)],
+      });
+    } catch (error) {
+      Logger.error(
+        `Failed to send error message: ${error instanceof Error ? error.message : String(error)}`
+      );
+    }
   }
 }
