@@ -1,6 +1,6 @@
 import { PermissionFlagsBits } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Argument } from '@structures/Argument.js';
 
@@ -10,6 +10,7 @@ export default class KickCommand extends Command {
       name: 'kick',
       description: 'Kick a user from the server',
       requiredPermissions: [PermissionFlagsBits.KickMembers],
+      checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
       args: [
         new Argument({
           name: 'user',
@@ -28,14 +29,8 @@ export default class KickCommand extends Command {
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const guild = context.interaction?.guild ?? context.message?.guild;
-    const author = context.interaction?.user ?? context.message?.author;
-
-    if (!guild) {
-      return await context.reply({
-        embeds: [Embeds.error('This command can only be used in a server.')],
-      });
-    }
+    const guild = context.guild!;
+    const author = context.author!;
 
     const user = guild.members.cache.get(context.args.user as string);
 

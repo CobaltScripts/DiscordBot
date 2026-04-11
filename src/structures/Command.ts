@@ -2,6 +2,7 @@ import {
   ChatInputCommandInteraction,
   Guild,
   Message,
+  User,
   SlashCommandBuilder,
   MessageCreateOptions,
   InteractionReplyOptions,
@@ -12,6 +13,7 @@ import {
 } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Argument, ArgumentType } from '@structures/Argument.js';
+import { Embeds } from '@utils/Embeds.js';
 import { Utils } from '@utils/Utils.js';
 
 export interface CommandOptions {
@@ -19,12 +21,22 @@ export interface CommandOptions {
   description: string;
   args?: Argument[];
   requiredPermissions?: PermissionResolvable[];
+  checkFlags?: CommandCheckFlags;
+}
+
+export enum CommandCheckFlags {
+  None = 0,
+  Author = 1 << 0,
+  Guild = 1 << 1,
+  Default = Author | Guild,
 }
 
 export interface CommandContext {
   client: ExtendedClient;
   interaction?: ChatInputCommandInteraction;
   message?: Message;
+  author?: User;
+  guild?: Guild;
   args: Record<string, string | number | boolean | object | null | undefined>;
   reply(content: string | MessageCreateOptions | InteractionReplyOptions): Promise<void>;
   deferReply(ephemeral?: boolean): Promise<void>;
@@ -37,12 +49,14 @@ export abstract class Command {
   public readonly description: string;
   public readonly args: Argument[];
   public readonly requiredPermissions: PermissionResolvable[];
+  public readonly checkFlags: CommandCheckFlags;
 
   constructor(options: CommandOptions) {
     this.name = options.name;
     this.description = options.description;
     this.args = options.args ?? [];
     this.requiredPermissions = options.requiredPermissions ?? [];
+    this.checkFlags = options.checkFlags ?? CommandCheckFlags.Default;
   }
 
   public buildSlashCommand(): SlashCommandBuilder {
@@ -59,6 +73,26 @@ export abstract class Command {
     }
 
     return builder;
+  }
+
+  public async run(client: ExtendedClient, context: CommandContext): Promise<void> {
+    if (this.checkFlags & CommandCheckFlags.Author && !context.author) {
+      await context.reply({
+        embeds: [Embeds.error('Unable to identify the command author.')],
+      });
+
+      return;
+    }
+
+    if (this.checkFlags & CommandCheckFlags.Guild && !context.guild) {
+      await context.reply({
+        embeds: [Embeds.error('This command can only be used in a server.')],
+      });
+
+      return;
+    }
+
+    await this.execute(client, context);
   }
 
   private addArgumentToBuilder(builder: SlashCommandBuilder, arg: Argument): void {
@@ -164,6 +198,8 @@ export abstract class Command {
       client,
       interaction,
       message,
+      author: interaction?.user ?? message?.author,
+      guild: interaction?.guild ?? message?.guild ?? undefined,
       args,
       reply: async (content: string | MessageCreateOptions | InteractionReplyOptions) => {
         if (interaction) {

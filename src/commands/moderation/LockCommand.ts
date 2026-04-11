@@ -1,6 +1,6 @@
 import { PermissionFlagsBits, TextChannel } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Argument } from '@structures/Argument.js';
 
@@ -10,6 +10,7 @@ export default class LockCommand extends Command {
       name: 'lock',
       description: 'Lock a channel',
       requiredPermissions: [PermissionFlagsBits.ManageChannels],
+      checkFlags: CommandCheckFlags.Guild,
       args: [
         new Argument({
           name: 'channel',
@@ -22,16 +23,10 @@ export default class LockCommand extends Command {
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const guild = context.interaction?.guild ?? context.message?.guild;
-
-    if (!guild) {
-      return await context.reply({
-        embeds: [Embeds.error('This command can only be used in a server.')],
-      });
-    }
+    const guild = context.guild!;
 
     const channel = context.args.channel
-      ? guild?.channels.cache.get(context.args.channel as string)
+      ? guild.channels.cache.get(context.args.channel as string)
       : (context.interaction?.channel ?? context.message?.channel);
 
     if (!channel || !channel.isTextBased()) {

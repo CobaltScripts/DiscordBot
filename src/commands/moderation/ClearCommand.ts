@@ -1,6 +1,6 @@
 import { PermissionFlagsBits, TextChannel } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Argument } from '@structures/Argument.js';
 
@@ -10,6 +10,7 @@ export default class ClearCommand extends Command {
       name: 'clear',
       description: 'Clear messages from a channel',
       requiredPermissions: [PermissionFlagsBits.ManageMessages],
+      checkFlags: CommandCheckFlags.None,
       args: [
         new Argument({
           name: 'amount',
@@ -22,14 +23,6 @@ export default class ClearCommand extends Command {
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const guild = context.interaction?.guild ?? context.message?.guild;
-
-    if (!guild) {
-      return await context.reply({
-        embeds: [Embeds.error('This command can only be used in a server.')],
-      });
-    }
-
     const amount = context.args.amount as number;
 
     if (!amount || isNaN(amount) || amount < 1 || amount > 100) {

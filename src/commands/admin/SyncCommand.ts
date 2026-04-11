@@ -1,8 +1,8 @@
 import { PermissionFlagsBits } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext } from '@structures/Command.js';
-import { Constants } from '@utils/Constants.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
+import { Constants } from '@utils/Constants.js';
 
 export default class SyncCommand extends Command {
   constructor() {
@@ -10,17 +10,12 @@ export default class SyncCommand extends Command {
       name: 'sync',
       description: "Cleanup each member's roles",
       requiredPermissions: [PermissionFlagsBits.Administrator],
+      checkFlags: CommandCheckFlags.Guild,
     });
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const guild = context.interaction?.guild ?? context.message?.guild;
-
-    if (!guild) {
-      return await context.reply({
-        embeds: [Embeds.error('This command can only be used in a server.')],
-      });
-    }
+    const guild = context.guild!;
 
     const members = await guild.members.fetch();
     const communityRole = guild.roles.cache.get(Constants.ROLES.COMMUNITY);
