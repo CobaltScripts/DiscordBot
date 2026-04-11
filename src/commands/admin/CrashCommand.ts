@@ -1,5 +1,5 @@
 import { PermissionsBitField } from 'discord.js';
-import { Command, CommandContext } from '@structures/Command.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Constants } from '@utils/Constants.js';
@@ -10,19 +10,12 @@ export default class CrashCommand extends Command {
       name: 'crash',
       description: 'Crash the bot',
       requiredPermissions: [PermissionsBitField.Flags.Administrator],
+      checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
     });
   }
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
-    const author = context.interaction?.user || context.message?.author;
-
-    if (!author) {
-      await context.reply({
-        embeds: [Embeds.error('Unable to identify the command author.')],
-      });
-
-      return;
-    }
+    const author = context.author!;
 
     if (!Constants.TRUSTED_USER_IDS.includes(author.id)) {
       await context.reply({
