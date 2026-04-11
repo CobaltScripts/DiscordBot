@@ -1,4 +1,3 @@
-import { RuntimeError } from '../errors/RuntimeError.js';
 import type { GuildSettingsFile } from '../types/JsonValidationTypes.js';
 
 export function validateGuildSettingsFile(
@@ -6,14 +5,14 @@ export function validateGuildSettingsFile(
   jsonFilePath: string
 ): asserts data is GuildSettingsFile {
   if (!isRecord(data)) {
-    throw new RuntimeError(
+    throw new TypeError(
       `Invalid guild settings in ${jsonFilePath}: root value must be an object.`
     );
   }
 
   for (const [guildId, guildData] of Object.entries(data)) {
     if (!isRecord(guildData)) {
-      throw new RuntimeError(
+      throw new TypeError(
         `Invalid guild settings in ${jsonFilePath}: guild ${guildId} must be an object.`
       );
     }
@@ -21,13 +20,13 @@ export function validateGuildSettingsFile(
     assertExactKeys(guildData, ['channels', 'roles', 'trusted'], `guild ${guildId}`);
 
     if (!isRecord(guildData.channels)) {
-      throw new RuntimeError(
+      throw new TypeError(
         `Invalid guild settings in ${jsonFilePath}: guild ${guildId}.channels must be an object.`
       );
     }
 
     if (!isRecord(guildData.roles)) {
-      throw new RuntimeError(
+      throw new TypeError(
         `Invalid guild settings in ${jsonFilePath}: guild ${guildId}.roles must be an object.`
       );
     }
@@ -37,6 +36,7 @@ export function validateGuildSettingsFile(
       ['logging', 'commits', 'errors'],
       `guild ${guildId}.channels`
     );
+
     assertExactKeys(
       guildData.roles,
       ['updates', 'qotd', 'support', 'community'],
@@ -45,7 +45,7 @@ export function validateGuildSettingsFile(
 
     for (const [key, value] of Object.entries(guildData.channels)) {
       if (typeof value !== 'string') {
-        throw new RuntimeError(
+        throw new TypeError(
           `Invalid guild settings in ${jsonFilePath}: guild ${guildId}.channels.${key} must be a string.`
         );
       }
@@ -53,7 +53,7 @@ export function validateGuildSettingsFile(
 
     for (const [key, value] of Object.entries(guildData.roles)) {
       if (typeof value !== 'string') {
-        throw new RuntimeError(
+        throw new TypeError(
           `Invalid guild settings in ${jsonFilePath}: guild ${guildId}.roles.${key} must be a string.`
         );
       }
@@ -63,7 +63,7 @@ export function validateGuildSettingsFile(
       !Array.isArray(guildData.trusted) ||
       !guildData.trusted.every((entry) => typeof entry === 'string')
     ) {
-      throw new RuntimeError(
+      throw new TypeError(
         `Invalid guild settings in ${jsonFilePath}: guild ${guildId}.trusted must be an array of strings.`
       );
     }
@@ -83,14 +83,14 @@ function assertExactKeys(
   const sortedExpectedKeys = [...expectedKeys].sort();
 
   if (actualKeys.length !== sortedExpectedKeys.length) {
-    throw new RuntimeError(
+    throw new TypeError(
       `Invalid guild settings: ${label} must contain exactly ${sortedExpectedKeys.join(', ')}.`
     );
   }
 
   for (let index = 0; index < sortedExpectedKeys.length; index += 1) {
     if (actualKeys[index] !== sortedExpectedKeys[index]) {
-      throw new RuntimeError(
+      throw new TypeError(
         `Invalid guild settings: ${label} must contain exactly ${sortedExpectedKeys.join(', ')}.`
       );
     }
