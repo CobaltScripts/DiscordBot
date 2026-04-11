@@ -69,16 +69,16 @@ export class ExtendedClient extends Client {
     });
 
     let activity: ActivityOptions = {
-      name: "Sniffing glue",
+      name: 'Sniffing glue',
       type: ActivityType.Custom,
-      state: "Sniffing glue",
+      state: 'Sniffing glue',
     };
 
     if (cobaltGuild?.memberCount !== undefined) {
       activity = {
         name: `${cobaltGuild?.memberCount} members`,
         type: ActivityType.Watching,
-      }
+      };
     }
 
     this.user?.setPresence({
