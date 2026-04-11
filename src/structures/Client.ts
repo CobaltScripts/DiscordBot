@@ -1,4 +1,11 @@
-import { ActivityType, Client, GatewayIntentBits, Partials, TextChannel } from 'discord.js';
+import {
+  ActivityOptions,
+  ActivityType,
+  Client,
+  GatewayIntentBits,
+  Partials,
+  TextChannel,
+} from 'discord.js';
 import { readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -61,17 +68,22 @@ export class ExtendedClient extends Client {
       return guild.id == COBALT_GUILD_ID;
     });
 
-    const presenceName = this.user?.setPresence({
+    let activity: ActivityOptions = {
+      name: "Sniffing glue",
+      type: ActivityType.Custom,
+      state: "Sniffing glue",
+    };
+
+    if (cobaltGuild?.memberCount !== undefined) {
+      activity = {
+        name: `${cobaltGuild?.memberCount} members`,
+        type: ActivityType.Watching,
+      }
+    }
+
+    this.user?.setPresence({
       status: 'dnd',
-      activities: [
-        {
-          name:
-            cobaltGuild?.memberCount === undefined
-              ? `${cobaltGuild?.memberCount} members`
-              : 'paint dry',
-          type: ActivityType.Watching,
-        },
-      ],
+      activities: [activity],
     });
   }
 
