@@ -1,6 +1,8 @@
 import { Event } from '@structures/Event.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Message, PermissionFlagsBits } from 'discord.js';
+import { isErrorWithMessage, messageOrJsonToMessage } from '@utils/ErrorUtil.js';
+import { Logger } from '@utils/Logger.js';
 
 export default class ChatBotHandleEvent extends Event<'messageCreate'> {
   constructor() {
@@ -32,7 +34,14 @@ export default class ChatBotHandleEvent extends Event<'messageCreate'> {
 
     await message.channel.sendTyping();
 
-    const res = await client.chatBot.generateResponse(content, message.author);
+    let res;
+    try {
+      res = await client.chatBot.generateResponse(content, message.author);
+    } catch (error) {
+      if (isErrorWithMessage(error)) {
+        await Logger.logErrorWithBot(messageOrJsonToMessage(error.message), message.guild);
+      }
+    }
 
     if (!res || res.length === 0) {
       return;

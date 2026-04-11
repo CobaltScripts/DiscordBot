@@ -1,4 +1,4 @@
-export class RuntimeException extends Error {
+export class RuntimeError extends Error {
   constructor(message: string) {
     super(message);
     this.name = 'RuntimeException';

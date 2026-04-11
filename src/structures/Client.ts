@@ -61,31 +61,18 @@ export class ExtendedClient extends Client {
       return guild.id == COBALT_GUILD_ID;
     });
 
-    this.user?.setPresence({
+    const presenceName = this.user?.setPresence({
       status: 'dnd',
       activities: [
         {
-          name: `${cobaltGuild?.memberCount} members`,
+          name:
+            cobaltGuild?.memberCount === undefined
+              ? `${cobaltGuild?.memberCount} members`
+              : 'paint dry',
           type: ActivityType.Watching,
         },
       ],
     });
-  }
-
-  public static async logError(message: string, channel: TextChannel): Promise<void> {
-    try {
-      if (!channel || !channel.isTextBased()) {
-        return;
-      }
-
-      await channel.send({
-        embeds: [Embeds.error(message)],
-      });
-    } catch (error) {
-      Logger.error(
-        `Failed to send error message: ${error instanceof Error ? error.message : String(error)}`
-      );
-    }
   }
 
   private async start(extendedClientOptions: ExtendedClientOptions): Promise<void> {

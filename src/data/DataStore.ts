@@ -4,6 +4,8 @@ import * as fs from 'fs';
 import { GUILD_SETTINGS_FILE } from '@data/Config.js';
 import { CommandContext } from '@structures/Command.js';
 import { validateGuildSettingsFile } from '../utils/JsonValidation.js';
+import { Logger } from '@utils/Logger.js';
+import { IllegalArgumentError } from '../errors/IllegalArgumentError.js';
 
 export class GuildData {
   readonly guildId: string;
@@ -68,6 +70,13 @@ export function getDataFromContext(context: CommandContext): GuildData | undefin
   return getDataForGuild(context.guild.id);
 }
 
-export function getDataForGuild(guildId: string): GuildData | undefined {
-  return dataStore.find((guild) => guild.guildId === guildId);
+export function getDataForGuild(guildId: string): GuildData {
+  const data = dataStore.find((guild) => guild.guildId === guildId);
+  if (data === undefined) {
+    throw new IllegalArgumentError(
+      `Requested data for guild: ${guildId}, but this guild is not found in the guild settings file!`
+    );
+  }
+
+  return data;
 }
