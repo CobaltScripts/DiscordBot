@@ -28,9 +28,14 @@ export default class HackedAccountHandleEvent extends Event<'messageCreate'> {
     });
   }
 
-  public async execute(client: ExtendedClient, message: Message): Promise<void> {
-    if (message.author.bot) return;
-    if (!message.inGuild() || !message.member) return;
+  public async execute(_: ExtendedClient, message: Message): Promise<void> {
+    if (message.author.bot) {
+      return;
+    }
+
+    if (!message.inGuild() || !message.member) {
+      return;
+    }
 
     const content = message.content.toLowerCase();
 

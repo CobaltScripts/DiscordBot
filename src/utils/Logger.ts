@@ -1,8 +1,7 @@
 import chalk from 'chalk';
-import { Client, Guild, TextChannel } from 'discord.js';
+import { Guild } from 'discord.js';
 import { Embeds } from './Embeds.js';
-import { getDataForGuild } from '@data/DataStore.js';
-import { ExtendedClient } from '@structures/Client.js';
+import Constants from './Constants.js';
 
 export class Logger {
   public static success(message: string): void {
@@ -35,7 +34,7 @@ export class Logger {
   }
 
   public static async logErrorWithBot(message: string, guild: Guild): Promise<void> {
-    const channel = await guild.channels.fetch(getDataForGuild(guild.id).channels.errors);
+    const channel = await guild.channels.fetch(Constants.channels.errors);
 
     try {
       if (!channel || !channel.isTextBased()) {

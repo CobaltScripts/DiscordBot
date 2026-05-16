@@ -28,7 +28,7 @@ export default class KickCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
     const author = context.author!;
 

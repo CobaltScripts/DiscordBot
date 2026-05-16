@@ -22,7 +22,7 @@ export default class ClearCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const amount = context.args.amount as number;
 
     if (!amount || isNaN(amount) || amount < 1 || amount > 100) {

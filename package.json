@@ -9,10 +9,8 @@
     "dev": "tsx watch -r tsconfig-paths/register src/index.ts",
     "build": "tsc && tsc-alias",
     "start": "node dist/index.js",
-    "lint": "eslint src",
-    "lint:fix": "eslint src --fix",
-    "format": "prettier --write src",
-    "format:check": "prettier --check src"
+    "check": "tsc --noEmit && eslint src --max-warnings 0",
+    "format": "prettier --write src"
   },
   "dependencies": {
     "@mistralai/mistralai": "^2.2.0",
@@ -29,6 +27,8 @@
     "@typescript-eslint/eslint-plugin": "^8.58.1",
     "@typescript-eslint/parser": "^8.58.1",
     "eslint": "^10.2.0",
+    "eslint-plugin-unused-imports": "^4.4.1",
+    "globals": "^17.6.0",
     "prettier": "^3.8.2",
     "tsc-alias": "^1.8.16",
     "tsconfig-paths": "^4.2.0",

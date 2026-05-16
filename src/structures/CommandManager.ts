@@ -17,6 +17,7 @@ export class CommandManager {
   public async loadCommands(commandsDirectory: string): Promise<void> {
     const commandFiles = await this.getCommandFiles(commandsDirectory);
     const separator: string = ', ';
+
     let loadedCommands: string = '';
 
     for (const commandPath of commandFiles) {
@@ -35,6 +36,7 @@ export class CommandManager {
       this.commands.set(command.name, command);
       loadedCommands += command.name + separator;
     }
+
     Logger.info(`Loaded commands: ${loadedCommands.slice(0, 0 - separator.length)}`);
   }
 
@@ -77,15 +79,12 @@ export class CommandManager {
       Logger.error(
         `Failed to register slash commands: ${error instanceof Error ? error.message : String(error)}`
       );
+
       throw error;
     }
   }
 
   public getCommand(name: string): Command | undefined {
     return this.commands.get(name.toLowerCase());
-  }
-
-  public getAllCommands(): Command[] {
-    return Array.from(this.commands.values());
   }
 }

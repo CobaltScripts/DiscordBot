@@ -1,0 +1,28 @@
+const CHANNELS = {
+  logging: '1442896999237030031',
+  commits: '1489996651551522816',
+  errors: '1491479994994659428',
+};
+
+const ROLES = {
+  updates: '1445497401614925914',
+  qotd: '1445497592573067546',
+  support: '1445887485853962300',
+  community: '1416251642185121823',
+};
+
+const TRUSTED_USERS = [
+  '1441859003708866601',
+  '768481984242253904',
+  '855798460593733652',
+  '1382022366040686763',
+];
+
+const GUILD_ID = '1325571365079879774';
+
+export default {
+  channels: CHANNELS,
+  roles: ROLES,
+  trustedUsers: TRUSTED_USERS,
+  guildId: GUILD_ID,
+};

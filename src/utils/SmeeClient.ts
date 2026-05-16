@@ -30,20 +30,20 @@ interface GitHubPushPayload {
 export interface SmeeClientOptions {
   source: string;
   target: string;
-  channelIds: string[];
+  channelId: string;
   port: number;
 }
 
 export class SmeeClient {
   private readonly source?: string;
   private readonly target: string;
-  private readonly channelIds: string[];
+  private readonly channelId: string;
   private readonly port: number;
 
   constructor(options: SmeeClientOptions) {
     this.source = options.source;
     this.target = options.target;
-    this.channelIds = options.channelIds;
+    this.channelId = options.channelId;
     this.port = options.port;
   }
 
@@ -166,14 +166,12 @@ export class SmeeClient {
       ])
       .setColor(0x4682b4);
 
-    for (const channelId of this.channelIds) {
-      const channel = await client.channels.fetch(channelId);
+    const channel = await client.channels.fetch(this.channelId);
 
-      if (channel?.isTextBased() && 'send' in channel) {
-        await channel.send({
-          embeds: [embed],
-        });
-      }
+    if (channel?.isTextBased() && 'send' in channel) {
+      await channel.send({
+        embeds: [embed],
+      });
     }
 
     res.status(200).send('Webhook received and processed');

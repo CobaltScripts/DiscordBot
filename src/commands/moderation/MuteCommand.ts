@@ -34,10 +34,9 @@ export default class MuteCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
     const author = context.author!;
-
     const user = guild.members.cache.get(context.args.user as string);
 
     if (!user) {
@@ -63,7 +62,7 @@ export default class MuteCommand extends Command {
       await context.reply({
         embeds: [Embeds.success(`${user.user.tag} has been muted for ${durationString}.`)],
       });
-    } catch (error) {
+    } catch {
       await context.reply({
         embeds: [Embeds.error('Something went wrong when trying to mute this user...')],
       });

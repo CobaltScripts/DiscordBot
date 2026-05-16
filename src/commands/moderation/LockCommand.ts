@@ -22,7 +22,7 @@ export default class LockCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
 
     const channel = context.args.channel

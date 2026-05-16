@@ -1,4 +1,4 @@
-import { EmbedBuilder, Guild, GuildMember } from 'discord.js';
+import { EmbedBuilder, GuildMember } from 'discord.js';
 
 export function buildGuildMemberLogEmbed(
   member: GuildMember,

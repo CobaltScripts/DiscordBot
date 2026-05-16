@@ -28,10 +28,9 @@ export default class RoleCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
     const author = context.author!;
-
     const user = guild.members.cache.get(context.args.user as string);
 
     if (!user) {

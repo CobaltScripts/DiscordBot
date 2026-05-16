@@ -11,13 +11,20 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
   }
 
   public async execute(client: ExtendedClient, message: Message): Promise<void> {
-    if (message.author.bot) return;
-    if (!message.content.startsWith(client.prefix)) return;
+    if (message.author.bot) {
+      return;
+    }
+
+    if (!message.content.startsWith(client.prefix)) {
+      return;
+    }
 
     const args = message.content.slice(client.prefix.length).trim().split(/\s+/);
     const commandName = args.shift()?.toLowerCase();
 
-    if (!commandName) return;
+    if (!commandName) {
+      return;
+    }
 
     const command = client.commandManager?.getCommand(commandName);
 
@@ -31,8 +38,8 @@ export default class MessageCreateEvent extends Event<'messageCreate'> {
 
     try {
       const parsedArgs = await command.parseChatArgs(args, message.guild ?? undefined);
-
       const context = command.createContext(client, parsedArgs, undefined, message);
+
       await command.run(client, context);
     } catch (error) {
       await message.reply({

@@ -1,8 +1,8 @@
 import { Event } from '@structures/Event.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { GuildMember } from 'discord.js';
-import { getDataForGuild } from '@data/DataStore.js';
 import { buildGuildMemberLogEmbed } from '../../utils/GuildMemberLog.js';
+import Constants from '@utils/Constants.js';
 
 export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
   constructor() {
@@ -13,13 +13,6 @@ export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
 
   public async execute(client: ExtendedClient, member: GuildMember): Promise<void> {
     const guild = member.guild;
-
-    const data = getDataForGuild(guild.id);
-
-    if (!data) {
-      return;
-    }
-
     const embed = buildGuildMemberLogEmbed(
       member,
       'Member Left',
@@ -27,7 +20,7 @@ export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
       `${member.user.toString()} has left the server.`
     );
 
-    const channel = guild.channels.cache.get(data.channels.logging);
+    const channel = guild.channels.cache.get(Constants.channels.logging);
 
     if (!channel || !channel.isTextBased()) {
       return;

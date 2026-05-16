@@ -2,7 +2,7 @@ import { PermissionsBitField } from 'discord.js';
 import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Embeds } from '@utils/Embeds.js';
-import * as ds from '@data/DataStore.js';
+import Constants from '@utils/Constants.js';
 
 export default class ShutdownCommand extends Command {
   constructor() {
@@ -16,15 +16,8 @@ export default class ShutdownCommand extends Command {
 
   public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
     const author = context.author!;
-    const data = ds.getDataFromContext(context);
 
-    if (!data) {
-      return await context.reply({
-        embeds: [Embeds.error('Something went wrong, please try again later.')],
-      });
-    }
-
-    if (!data.trusted.includes(author.id)) {
+    if (!Constants.trustedUsers.includes(author.id)) {
       await context.reply({
         embeds: [Embeds.error('You are not authorized to use this command.')],
       });

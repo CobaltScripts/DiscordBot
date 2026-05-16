@@ -14,7 +14,9 @@ export default class InteractionCreateEvent extends Event {
     client: ExtendedClient,
     interaction: ChatInputCommandInteraction
   ): Promise<void> {
-    if (!interaction.isChatInputCommand()) return;
+    if (!interaction.isChatInputCommand()) {
+      return;
+    }
 
     const command = client.commandManager?.getCommand(interaction.commandName);
 

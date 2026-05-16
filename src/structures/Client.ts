@@ -1,11 +1,4 @@
-import {
-  ActivityOptions,
-  ActivityType,
-  Client,
-  GatewayIntentBits,
-  Partials,
-  TextChannel,
-} from 'discord.js';
+import { ActivityOptions, ActivityType, Client, GatewayIntentBits, Partials } from 'discord.js';
 import { readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -13,10 +6,7 @@ import { Event } from '@structures/Event.js';
 import { CommandManager } from '@structures/CommandManager.js';
 import { SmeeClient } from '@utils/SmeeClient.js';
 import { ChatBot } from '@utils/ChatBot.js';
-import { Embeds } from '@utils/Embeds.js';
-import { Logger } from '@utils/Logger.js';
-import { COBALT_GUILD_ID } from '@data/Config.js';
-import { dataStore } from '@data/DataStore.js';
+import Constants from '@utils/Constants.js';
 
 export interface ExtendedClientOptions {
   token: string;
@@ -53,9 +43,7 @@ export class ExtendedClient extends Client {
     this.chatBot = new ChatBot(this, extendedClientOptions.mistralApiKey);
     this.smeeClient = new SmeeClient({
       source: extendedClientOptions.smeeUrl,
-      channelIds: dataStore
-        .map((guildStore) => guildStore.channels.commits)
-        .filter((channelId) => channelId.length > 0),
+      channelId: Constants.channels.commits,
       target: 'http://localhost:6242/webhook',
       port: 6242,
     });
@@ -65,7 +53,7 @@ export class ExtendedClient extends Client {
 
   public updatePresence(): void {
     const cobaltGuild = this.guilds.cache.find((guild) => {
-      return guild.id == COBALT_GUILD_ID;
+      return guild.id == Constants.guildId;
     });
 
     let activity: ActivityOptions = {

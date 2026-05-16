@@ -2,7 +2,7 @@ import { PermissionFlagsBits } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
-import * as ds from '@data/DataStore.js';
+import Constants from '@utils/Constants.js';
 
 export default class SyncCommand extends Command {
   constructor() {
@@ -14,25 +14,17 @@ export default class SyncCommand extends Command {
     });
   }
 
-  public async execute(client: ExtendedClient, context: CommandContext): Promise<void> {
+  public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
-    const data = ds.getDataFromContext(context);
-
-    if (!data) {
-      return await context.reply({
-        embeds: [Embeds.error('Something went wrong, please try again later.')],
-      });
-    }
-
     const members = await guild.members.fetch();
-    const communityRole = guild.roles.cache.get(data.roles.community);
+    const communityRole = guild.roles.cache.get(Constants.roles.community);
     const ignoredRoles = new Set(
       [
         guild.id, // @everyone role
         guild.roles.premiumSubscriberRole?.id,
-        guild.roles.cache.get(data.roles.updates)?.id,
-        guild.roles.cache.get(data.roles.qotd)?.id,
-        guild.roles.cache.get(data.roles.support)?.id,
+        guild.roles.cache.get(Constants.roles.updates)?.id,
+        guild.roles.cache.get(Constants.roles.qotd)?.id,
+        guild.roles.cache.get(Constants.roles.support)?.id,
       ].filter((id) => id != null)
     );
 
@@ -50,7 +42,6 @@ export default class SyncCommand extends Command {
         : null;
 
       const chosenRole = highestRealRole ?? communityRole;
-
       const rolesToRemove = realRoles.filter((r) => r.id !== chosenRole?.id);
 
       if (rolesToRemove.size > 0) {

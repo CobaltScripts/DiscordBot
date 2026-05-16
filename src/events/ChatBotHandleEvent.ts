@@ -1,6 +1,6 @@
 import { Event } from '@structures/Event.js';
 import { ExtendedClient } from '@structures/Client.js';
-import { Message, PermissionFlagsBits } from 'discord.js';
+import { Message } from 'discord.js';
 import { isErrorWithMessage, messageOrJsonToMessage } from '@utils/ErrorUtil.js';
 import { Logger } from '@utils/Logger.js';
 
@@ -35,6 +35,7 @@ export default class ChatBotHandleEvent extends Event<'messageCreate'> {
     await message.channel.sendTyping();
 
     let res;
+
     try {
       res = await client.chatBot.generateResponse(content, message.author);
     } catch (error) {

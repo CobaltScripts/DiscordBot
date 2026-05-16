@@ -11,7 +11,7 @@ export default class ReactionRoleHandleEvent extends Event<'interactionCreate'> 
     });
   }
 
-  public async execute(client: ExtendedClient, interaction: ButtonInteraction): Promise<void> {
+  public async execute(_: ExtendedClient, interaction: ButtonInteraction): Promise<void> {
     if (!interaction.isButton() || !interaction.customId.startsWith('role_button:')) {
       return;
     }
