@@ -8,8 +8,8 @@ export function buildGuildMemberLogEmbed(
 ): EmbedBuilder {
   const avatarUrl = member.user.displayAvatarURL({ size: 256 });
   const createdAt = `<t:${Math.floor(member.user.createdAt.getTime() / 1000)}:R>`;
-  const joinedAt = member.joinedAt
-    ? `<t:${Math.floor(member.joinedAt.getTime() / 1000)}:R>`
+  const joinedAt = member.joinedTimestamp
+    ? `<t:${Math.floor(member.joinedTimestamp / 1000)}:R>`
     : 'Unknown';
 
   return new EmbedBuilder()
