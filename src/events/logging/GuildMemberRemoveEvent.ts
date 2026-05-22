@@ -26,7 +26,7 @@ export default class GuildMemberRemoveEvent extends Event<'guildMemberRemove'> {
       return;
     }
 
-    client.updatePresence();
+    await client.updatePresence();
     await channel.send({ embeds: [embed] });
   }
 }

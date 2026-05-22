@@ -26,7 +26,7 @@ export default class GuildMemberAddEvent extends Event<'guildMemberAdd'> {
       return;
     }
 
-    client.updatePresence();
+    await client.updatePresence();
     await member.roles.add(Constants.roles.community);
     await channel.send({ embeds: [embed] });
   }

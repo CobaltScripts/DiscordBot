@@ -51,7 +51,7 @@ export class ExtendedClient extends Client {
     void this.start(extendedClientOptions);
   }
 
-  public updatePresence(): void {
+  public async updatePresence(): Promise<void> {
     const cobaltGuild = this.guilds.cache.find((guild) => {
       return guild.id == Constants.guildId;
     });
@@ -62,9 +62,18 @@ export class ExtendedClient extends Client {
       state: 'Sniffing glue',
     };
 
-    if (cobaltGuild?.memberCount !== undefined) {
+    if (cobaltGuild) {
+      try {
+        await cobaltGuild.members.fetch();
+      } catch {}
+
+      const humanCount =
+        cobaltGuild.members.cache.size > 0
+          ? cobaltGuild.members.cache.filter((member) => !member.user?.bot).size
+          : cobaltGuild.memberCount ?? 0;
+
       activity = {
-        name: `${cobaltGuild?.memberCount} members`,
+        name: `${humanCount} members`,
         type: ActivityType.Watching,
       };
     }

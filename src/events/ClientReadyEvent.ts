@@ -34,7 +34,8 @@ export default class ClientReadyEvent extends Event<'clientReady'> {
 
     client.commandManager = commandManager;
     client.smeeClient.start(client);
-    client.updatePresence();
+    
+    await client.updatePresence();
 
     cron.schedule('0 0 * * *', async () => {
       const channel = await client.channels.fetch(Constants.channels.qotd);
