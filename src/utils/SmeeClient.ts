@@ -102,9 +102,15 @@ export class SmeeClient {
 
     const firstCommit = payload.commits?.[0] ?? {};
     const commitMessage = firstCommit.message || 'No commit message';
-    const commitTimeUTC = firstCommit.timestamp
-      ? `<t:${Math.floor(new Date(firstCommit.timestamp).getTime() / 1000)}:R>`
-      : 'Unknown';
+    
+    let commitTimeUTC: string;
+
+    if (firstCommit.timestamp) {
+      commitTimeUTC = `<t:${Math.floor(new Date(firstCommit.timestamp).getTime() / 1000)}:R>`;
+    } else {
+      res.status(200).send('No timestamp found');
+      return;
+    }
 
     const fileTypeCount: Record<string, number> = {};
     const fileList = [...allAddedFiles, ...allModifiedFiles];
