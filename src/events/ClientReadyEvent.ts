@@ -4,9 +4,6 @@ import { Logger } from '@utils/Logger.js';
 import { CommandManager } from '@structures/CommandManager.js';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { TextChannel } from 'discord.js';
-import cron from 'node-cron';
-import Constants from '@utils/Constants.js';
 
 export default class ClientReadyEvent extends Event<'clientReady'> {
   constructor() {
@@ -34,24 +31,7 @@ export default class ClientReadyEvent extends Event<'clientReady'> {
 
     client.commandManager = commandManager;
     client.smeeClient.start(client);
-    
+
     await client.updatePresence();
-
-    cron.schedule('0 0 * * *', async () => {
-      const channel = await client.channels.fetch(Constants.channels.qotd);
-
-      if (!channel?.isTextBased()) {
-        return;
-      }
-
-      const poll = await client.chatBot.generateQotdPoll();
-
-      if (poll == null) {
-        return;
-      }
-
-      await (channel as TextChannel).send({ poll });
-      await (channel as TextChannel).send(`|| <@&${Constants.roles.qotd}> ||`);
-    });
   }
 }

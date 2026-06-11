@@ -102,7 +102,7 @@ export class SmeeClient {
 
     const firstCommit = payload.commits?.[0] ?? {};
     const commitMessage = firstCommit.message || 'No commit message';
-    
+
     let commitTimeUTC: string;
 
     if (firstCommit.timestamp) {

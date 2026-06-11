@@ -40,7 +40,7 @@ export class ExtendedClient extends Client {
     });
 
     this.prefix = extendedClientOptions.prefix;
-    this.chatBot = new ChatBot(this, extendedClientOptions.mistralApiKey);
+    this.chatBot = new ChatBot(extendedClientOptions.mistralApiKey);
     this.smeeClient = new SmeeClient({
       source: extendedClientOptions.smeeUrl,
       channelId: Constants.channels.commits,
@@ -70,7 +70,7 @@ export class ExtendedClient extends Client {
       const humanCount =
         cobaltGuild.members.cache.size > 0
           ? cobaltGuild.members.cache.filter((member) => !member.user?.bot).size
-          : cobaltGuild.memberCount ?? 0;
+          : (cobaltGuild.memberCount ?? 0);
 
       activity = {
         name: `${humanCount} members`,
