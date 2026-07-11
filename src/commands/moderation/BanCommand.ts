@@ -31,7 +31,7 @@ export default class BanCommand extends Command {
   public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
     const author = context.author!;
-
+    const authorMember = guild.members.cache.get(author.id) ?? await guild.members.fetch(author.id).catch(() => null);
     const user = guild.members.cache.get(context.args.user as string);
 
     if (!user) {
@@ -46,10 +46,18 @@ export default class BanCommand extends Command {
       })
     }
 
-
-    if (author.roles.highest.position <= user.roles.highest.position) {
-      return await context.reply({ embeds: [Embeds.error("You can't ban someone with an equal or higher role.")] });
+    if (!authorMember) {
+      return await context.reply({
+        embeds: [Embeds.error('Could not resolve member?')],
+      });
     }
+
+    if (authorMember.roles.highest.position <= user.roles.highest.position) {
+      return await context.reply({
+        embeds: [Embeds.error("You can't ban someone with an equal or higher role.")],
+      });
+    }
+    
     await user.ban({
       reason: `${author?.tag}: ${context.args.reason as string | undefined}`,
     });
