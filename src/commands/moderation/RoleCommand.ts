@@ -3,6 +3,7 @@ import { ExtendedClient } from '@structures/Client.js';
 import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
 import { Embeds } from '@utils/Embeds.js';
 import { Argument } from '@structures/Argument.js';
+import Constants from '@utils/Constants.js';
 
 export default class RoleCommand extends Command {
   constructor() {
@@ -10,7 +11,7 @@ export default class RoleCommand extends Command {
       name: 'role',
       description: 'Give or remove a role from a user',
       checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
-      requiredPermissions: [PermissionFlagsBits.ManageRoles],
+      requiredPermissions: [],
       args: [
         new Argument({
           name: 'user',
@@ -31,7 +32,16 @@ export default class RoleCommand extends Command {
   public async execute(_: ExtendedClient, context: CommandContext): Promise<void> {
     const guild = context.guild!;
     const author = context.author!;
-    const user = guild.members.cache.get(context.args.user as string);
+    const user = guild.members.cache.get(context.args.user as string) ?? await guild.members.fetch(context.args.user as string).catch(() => null);
+    const authorAsMember = guild.members.cache.get(author.id) ?? await guild.members.fetch(author.id).catch(() => null);
+
+    if (!authorAsMember) {
+      return await context.reply({ embeds: [Embeds.error('Author not found in the server.')] });
+    }
+
+    const isTrusted = Constants.trustedUsers.includes(author.id);
+    const isOwner = guild.ownerId === author.id;
+    const isAdmin = authorAsMember.permissions.has(PermissionFlagsBits.Administrator);
 
     if (!user) {
       return await context.reply({
@@ -47,21 +57,17 @@ export default class RoleCommand extends Command {
       });
     }
 
-    const authorAsMember = guild.members.cache.get(author?.id ?? '');
-
-    if (!authorAsMember) {
-      return await context.reply({
-        embeds: [Embeds.error('Author not found in the server.')],
-      });
+    if (role.managed || role.id === guild.id) {
+      return await context.reply({ embeds: [Embeds.error('You cannot give yourself a bot role')] });
     }
 
-    if (authorAsMember.roles.highest.position <= role.position && guild.ownerId !== author?.id) {
+    if (!isAdmin && !isTrusted) {
+      return await context.reply({ embeds: [Embeds.error('You cannot run this command.')] });
+    }
+
+    if (!isOwner && !isTrusted && authorAsMember.roles.highest.position <= role.position) {
       return await context.reply({
-        embeds: [
-          Embeds.error(
-            'You cannot manage a role that is higher than or equal to your highest role.'
-          ),
-        ],
+        embeds: [Embeds.error('You cannot manage a role that is higher than or equal to your highest role.')],
       });
     }
 
