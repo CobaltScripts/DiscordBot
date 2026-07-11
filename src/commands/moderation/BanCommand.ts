@@ -40,6 +40,16 @@ export default class BanCommand extends Command {
       });
     }
 
+    if (user.permissions.has('Administrator')) {
+      return await context.reply({
+        embeds: [Embeds.error("You cannot ban an admin :sob:")]
+      })
+    }
+
+
+    if (author.roles.highest.position <= user.roles.highest.position) {
+      return await context.reply({ embeds: [Embeds.error("You can't ban someone with an equal or higher role.")] });
+    }
     await user.ban({
       reason: `${author?.tag}: ${context.args.reason as string | undefined}`,
     });

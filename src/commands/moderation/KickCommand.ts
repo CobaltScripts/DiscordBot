@@ -40,6 +40,17 @@ export default class KickCommand extends Command {
       });
     }
 
+    
+    if (user.permissions.has('Administrator')) {
+      return await context.reply({
+        embeds: [Embeds.error("You cannot kick an admin :sob:")]
+      })
+    }
+
+    if (author.roles.highest.position <= user.roles.highest.position) {
+      return await context.reply({ embeds: [Embeds.error("You can't kick someone with an equal or higher role.")] });
+    }
+
     await user.kick(`${author?.tag}: ${context.args.reason as string | undefined}`);
 
     await context.reply({
