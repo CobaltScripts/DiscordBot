@@ -1,8 +1,8 @@
-import { Event } from '#structures/Event.js';
-import { ExtendedClient } from '#structures/Client.js';
+import { Event } from '@structures/Event.js';
+import { ExtendedClient } from '@structures/Client.js';
 import { Message } from 'discord.js';
-import Constants from '#utils/Constants.js';
-import SoftBanCommand from '#commands/moderation/SoftBanCommand.js';
+import Constants from '@utils/Constants.js';
+import SoftBanCommand from '@commands/moderation/SoftBanCommand.js';
 
 export default class HackedAccountHandleEvent extends Event<'messageCreate'> {
   constructor() {

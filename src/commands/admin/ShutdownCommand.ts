@@ -1,8 +1,8 @@
 import { PermissionsBitField } from 'discord.js';
-import { Command, CommandContext, CommandCheckFlags } from '#structures/Command.js';
-import { ExtendedClient } from '#structures/Client.js';
-import { Embeds } from '#utils/Embeds.js';
-import Constants from '#utils/Constants.js';
+import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
+import { ExtendedClient } from '@structures/Client.js';
+import { Embeds } from '@utils/Embeds.js';
+import Constants from '@utils/Constants.js';
 
 export default class ShutdownCommand extends Command {
   constructor() {
