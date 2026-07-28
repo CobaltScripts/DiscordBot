@@ -1,8 +1,9 @@
 import express, { type Request, type Response } from 'express';
 import SmeeWebhookClient from 'smee-client';
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, TextChannel } from 'discord.js';
 import { ExtendedClient } from '@structures/Client.js';
 import { Logger } from '@utils/Logger.js';
+import Constants from './Constants.js';
 
 interface GitHubCommitAuthor {
   name?: string;
@@ -78,6 +79,7 @@ export class SmeeClient {
     const payload = req.body as GitHubPushPayload;
 
     if (!payload) {
+      Logger.error('Invalid payload')
       res.status(400).send('Invalid payload');
       return;
     }
@@ -108,6 +110,7 @@ export class SmeeClient {
     if (firstCommit.timestamp) {
       commitTimeUTC = `<t:${Math.floor(new Date(firstCommit.timestamp).getTime() / 1000)}:R>`;
     } else {
+      Logger.error('No timestamp found')
       res.status(200).send('No timestamp found');
       return;
     }
@@ -172,10 +175,11 @@ export class SmeeClient {
       ])
       .setColor(0x4682b4);
 
-    const channel = await client.channels.fetch(this.channelId);
+    const guild = client.guilds.cache.get(Constants.guildId);
+    const channel = guild?.channels.cache.get(this.channelId);
 
-    if (channel?.isTextBased() && 'send' in channel) {
-      await channel.send({
+    if (channel?.isTextBased()) {
+      await (channel as TextChannel).send({
         embeds: [embed],
       });
     }
