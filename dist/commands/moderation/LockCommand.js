@@ -1,0 +1,44 @@
+import { PermissionFlagsBits } from 'discord.js';
+import { Command, CommandCheckFlags } from '../../structures/Command.js';
+import { Embeds } from '../../utils/Embeds.js';
+import { Argument } from '../../structures/Argument.js';
+export default class LockCommand extends Command {
+    constructor() {
+        super({
+            name: 'lock',
+            description: 'Lock a channel',
+            checkFlags: CommandCheckFlags.Guild,
+            requiredPermissions: [PermissionFlagsBits.ManageChannels],
+            args: [
+                new Argument({
+                    name: 'channel',
+                    description: 'The channel to lock',
+                    type: 'channel',
+                    required: false,
+                }),
+            ],
+        });
+    }
+    async execute(_, context) {
+        const guild = context.guild;
+        const channel = context.args.channel
+            ? guild.channels.cache.get(context.args.channel)
+            : (context.interaction?.channel ?? context.message?.channel);
+        if (!channel || !channel.isTextBased()) {
+            return await context.reply({
+                embeds: [Embeds.error('Channel not found or not text-based.')],
+            });
+        }
+        const textChannel = channel;
+        const everyoneRole = guild.roles.everyone;
+        const isLocked = textChannel.permissionOverwrites.cache
+            .get(everyoneRole.id)
+            ?.deny.has(PermissionFlagsBits.SendMessages);
+        await textChannel.permissionOverwrites.edit(everyoneRole, {
+            SendMessages: isLocked ? null : false,
+        });
+        await context.reply({
+            embeds: [Embeds.success(`Channel ${isLocked ? 'unlocked' : 'locked'}!`)],
+        });
+    }
+}

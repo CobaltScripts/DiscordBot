@@ -1,0 +1,58 @@
+import { Event } from '../structures/Event.js';
+import { isErrorWithMessage, messageOrJsonToMessage } from '../utils/ErrorUtil.js';
+import { Logger } from '../utils/Logger.js';
+export default class ChatBotHandleEvent extends Event {
+    constructor() {
+        super({
+            name: 'messageCreate',
+        });
+    }
+    async execute(client, message) {
+        const botUser = client.user;
+        if (!botUser) {
+            return;
+        }
+        if (message.author.bot || !message.inGuild() || !message.channel.name.includes('ai-chat')) {
+            return;
+        }
+        if (!message.mentions.has(botUser)) {
+            return;
+        }
+        const content = message.content.trim().toLowerCase();
+        if (content === `<@!${botUser.id}>` || content === `<@${botUser.id}>`) {
+            return;
+        }
+        await message.channel.sendTyping();
+        let res;
+        try {
+            res = await client.chatBot.generateResponse(content, message.author);
+        }
+        catch (error) {
+            if (isErrorWithMessage(error)) {
+                await Logger.logErrorWithBot(messageOrJsonToMessage(error.message), message.guild);
+            }
+        }
+        if (!res || res.length === 0) {
+            return;
+        }
+        const msgs = res.split('|||');
+        for (const msg of msgs) {
+            if (msg === msgs[0]) {
+                await message.reply({
+                    content: msg,
+                    allowedMentions: {
+                        parse: [],
+                        repliedUser: false,
+                    },
+                });
+                continue;
+            }
+            await message.channel.send({
+                content: msg.trim(),
+                allowedMentions: {
+                    parse: [],
+                },
+            });
+        }
+    }
+}

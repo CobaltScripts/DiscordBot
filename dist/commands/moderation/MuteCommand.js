@@ -1,0 +1,83 @@
+import { Argument } from '../../structures/Argument.js';
+import { Command, CommandCheckFlags } from '../../structures/Command.js';
+import { PermissionsBitField } from 'discord.js';
+import { Embeds } from '../../utils/Embeds.js';
+export default class MuteCommand extends Command {
+    constructor() {
+        super({
+            name: 'mute',
+            description: 'Mute a user',
+            checkFlags: CommandCheckFlags.Author | CommandCheckFlags.Guild,
+            requiredPermissions: [PermissionsBitField.Flags.ModerateMembers],
+            args: [
+                new Argument({
+                    name: 'user',
+                    description: 'The user to mute',
+                    type: 'user',
+                    required: true,
+                }),
+                new Argument({
+                    name: 'duration',
+                    description: 'The duration to mute the user for (e.g. 10m, 1h, 1d)',
+                    type: 'string',
+                    required: true,
+                }),
+                new Argument({
+                    name: 'reason',
+                    description: 'The reason for muting the user',
+                    type: 'string',
+                    required: false,
+                }),
+            ],
+        });
+    }
+    async execute(_, context) {
+        const guild = context.guild;
+        const author = context.author;
+        const user = guild.members.cache.get(context.args.user);
+        if (!user) {
+            return await context.reply({
+                embeds: [Embeds.error('User not found.')],
+            });
+        }
+        const durationString = context.args.duration;
+        const durationMs = this.parseDuration(durationString);
+        if (durationMs === null) {
+            return await context.reply({
+                embeds: [Embeds.error('Invalid duration format. Use something like 10m, 1h, or 1d.')],
+            });
+        }
+        try {
+            await user.timeout(durationMs, `${author?.tag}: ${context.args.reason}`);
+            await context.reply({
+                embeds: [Embeds.success(`${user.user.tag} has been muted for ${durationString}.`)],
+            });
+        }
+        catch {
+            await context.reply({
+                embeds: [Embeds.error('Something went wrong when trying to mute this user...')],
+            });
+        }
+    }
+    parseDuration(duration) {
+        const regex = /^(\d+)(s|m|h|d)$/;
+        const match = duration.match(regex);
+        if (!match) {
+            return null;
+        }
+        const value = parseInt(match[1], 10);
+        const unit = match[2];
+        switch (unit) {
+            case 's':
+                return value * 1000;
+            case 'm':
+                return value * 60 * 1000;
+            case 'h':
+                return value * 60 * 60 * 1000;
+            case 'd':
+                return value * 24 * 60 * 60 * 1000;
+            default:
+                return null;
+        }
+    }
+}
