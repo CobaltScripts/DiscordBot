@@ -28,7 +28,7 @@ export class Logger {
   private static formatTimestamp(): string {
     const now = new Date();
 
-    return [now.getHours(), now.getMinutes(), now.getSeconds()]
+    return [now.getUTCHours(), now.getUTCMinutes(), now.getUTCSeconds()]
       .map((v) => String(v).padStart(2, '0'))
       .join(':');
   }
