@@ -1,8 +1,8 @@
 import { PermissionFlagsBits } from 'discord.js';
-import { ExtendedClient } from '@structures/Client.js';
-import { Command, CommandContext, CommandCheckFlags } from '@structures/Command.js';
-import { Embeds } from '@utils/Embeds.js';
-import { Argument } from '@structures/Argument.js';
+import { ExtendedClient } from '#structures/Client.js';
+import { Command, CommandContext, CommandCheckFlags } from '#structures/Command.js';
+import { Embeds } from '#utils/Embeds.js';
+import { Argument } from '#structures/Argument.js';
 
 export default class BanCommand extends Command {
   constructor() {
@@ -57,7 +57,7 @@ export default class BanCommand extends Command {
         embeds: [Embeds.error("You can't ban someone with an equal or higher role.")],
       });
     }
-    
+
     await user.ban({
       reason: `${author?.tag}: ${context.args.reason as string | undefined}`,
     });

@@ -1,8 +1,8 @@
 import express, { type Request, type Response } from 'express';
 import SmeeWebhookClient from 'smee-client';
 import { EmbedBuilder, TextChannel } from 'discord.js';
-import { ExtendedClient } from '@structures/Client.js';
-import { Logger } from '@utils/Logger.js';
+import { ExtendedClient } from '#structures/Client.js';
+import { Logger } from '#utils/Logger.js';
 import Constants from './Constants.js';
 
 interface GitHubCommitAuthor {

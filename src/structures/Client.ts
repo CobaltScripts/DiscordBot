@@ -2,11 +2,11 @@ import { ActivityOptions, ActivityType, Client, GatewayIntentBits, Partials } fr
 import { readdir } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { Event } from '@structures/Event.js';
-import { CommandManager } from '@structures/CommandManager.js';
-import { SmeeClient } from '@utils/SmeeClient.js';
-import { ChatBot } from '@utils/ChatBot.js';
-import Constants from '@utils/Constants.js';
+import { Event } from '#structures/Event.js';
+import { CommandManager } from '#structures/CommandManager.js';
+import { SmeeClient } from '#utils/SmeeClient.js';
+import { ChatBot } from '#utils/ChatBot.js';
+import Constants from '#utils/Constants.js';
 
 export interface ExtendedClientOptions {
   token: string;

@@ -10,14 +10,7 @@
     "strictNullChecks": true,
     "resolveJsonModule": true,
     "rootDir": "./src",
-    "outDir": "./dist",
-    "paths": {
-      "@commands/*": ["./src/commands/*"],
-      "@events/*": ["./src/events/*"],
-      "@structures/*": ["./src/structures/*"],
-      "@utils/*": ["./src/utils/*"],
-      "@data/*": ["./src/data/*"]
-    }
+    "outDir": "./dist"
   },
   "include": ["src"],
   "exclude": ["node_modules"]

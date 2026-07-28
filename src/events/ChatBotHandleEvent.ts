@@ -1,8 +1,8 @@
-import { Event } from '@structures/Event.js';
-import { ExtendedClient } from '@structures/Client.js';
+import { Event } from '#structures/Event.js';
+import { ExtendedClient } from '#structures/Client.js';
 import { Message } from 'discord.js';
-import { isErrorWithMessage, messageOrJsonToMessage } from '@utils/ErrorUtil.js';
-import { Logger } from '@utils/Logger.js';
+import { isErrorWithMessage, messageOrJsonToMessage } from '#utils/ErrorUtil.js';
+import { Logger } from '#utils/Logger.js';
 
 export default class ChatBotHandleEvent extends Event<'messageCreate'> {
   constructor() {
